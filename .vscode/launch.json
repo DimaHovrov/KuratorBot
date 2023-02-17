@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "BOT_TOKEN": "5615833913:AAGd3DVg5sL5rvmOGV-HhWnVLjddx8qU4nY",
+                "YDB_ENDPOINT": "grpcs://ydb.serverless.yandexcloud.net:2135",
+                "YDB_DATABASE": "/ru-central1/b1gujjgo5f2o8ovcu1b9/etn21441nb8nqeka0c4j",
+                "SA_KEY_FILE": "authorized_key.json"
+            }
+        }
+    ]
+}
