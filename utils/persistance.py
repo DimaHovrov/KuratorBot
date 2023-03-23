@@ -14,11 +14,9 @@ class YdbPersistance(BasePersistence):
             store_bot_data=False,
             store_callback_data=False,
         )
-        
 
     def get_chat_data(self) -> dict[int, dict]:
         return {}
-
 
     def get_conversations(self, name) -> dict:
         db.query = f"""select Name, Key, State 
@@ -34,13 +32,12 @@ class YdbPersistance(BasePersistence):
             conversation[key] = row.State
         return conversation
 
-
     def get_user_data(self) -> DefaultDict[int, dict]:
         result = defaultdict(dict)
-        
+
         db.query = f"""select Data, TelegramId
                        from UserData"""
-        
+
         rows = db.pool.retry_operation_sync(db.execute_query)
         for row in rows[0].rows:
             data = row.Data
@@ -49,20 +46,16 @@ class YdbPersistance(BasePersistence):
 
         return result
 
-
     def get_bot_data(self) -> dict:
         return {}
-
 
     def update_bot_data(self, data):
         pass
 
-
     def update_chat_data(self, chat_id, data):
         pass
 
-
-    def update_conversation(self, name, key:tuple[int, ...], new_state):
+    def update_conversation(self, name, key: tuple[int, ...], new_state):
         if new_state:
             max_id = db.get_max_id_Conversations() + 1
             json_key = json.dumps(key)
@@ -73,11 +66,10 @@ class YdbPersistance(BasePersistence):
             db.query = f"""delete from Conversations
                            where Name='{name}' and
                            CAST(Key as Utf8) =='{json_key}'"""
-        
+
         db.pool.retry_operation_sync(db.execute_query)
 
-
-    def update_user_data(self, user_id, data:dict):
+    def update_user_data(self, user_id, data: dict):
         if data:
             data = json.dumps(data)
             db.query = f"""upsert into UserData (TelegramId, Data, Updated)

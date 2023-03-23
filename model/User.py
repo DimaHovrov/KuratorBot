@@ -1,4 +1,4 @@
-#Класс юзера и связанные с ним запросы в бд
+# Класс юзера и связанные с ним запросы в бд
 
 import test
 import db.query_db as db
@@ -8,21 +8,22 @@ from telegram import Update
 welcome_text = 'Я вас узнал. Ваши данные присутствуют в базе, поэтому у вас есть доступ к командам данного бота'
 goodbye_text = 'Я вас не узнал. Иди- ка ты нафиг!'
 
-NO_REG, STUDENT, TUTOR, ADMIN = range(0,4)#возможные доступы юзера
+NO_REG, STUDENT, TUTOR, ADMIN = range(0, 4)  # возможные доступы юзера
+
 
 class User:
     """Класс пользователя"""
-    id : int
-    surname : str
-    name : str
-    patronymic : str
-    groups_id : str
-    telegram_login : str
-    telegram_id : int
-    is_connected_on_bot : bool
-    is_admin : bool
-    is_tutor : bool
-    is_student : bool
+    id: int
+    surname: str
+    name: str
+    patronymic: str
+    groups_id: str
+    telegram_login: str
+    telegram_id: int
+    is_connected_on_bot: bool
+    is_admin: bool
+    is_tutor: bool
+    is_student: bool
 
     def __init__(self, **kwargs):
         self.id = kwargs['id']
@@ -52,7 +53,7 @@ def user_reg_in_bot(update: Update):
 
 def get_user_by_phone_number(phone_number):
     db.query = f"""select * from Users as user where user.PhoneNumber = "{phone_number}";"""
-    
+
     result = db.pool.retry_operation_sync(db.execute_query)
 
     if len(result[0].rows) == 0:
@@ -64,23 +65,23 @@ def get_user_by_phone_number(phone_number):
 
 
 def get_user_by_telegram_id(telegram_id):
-    
+
     db.query = f"""select * from Users as user where user.TelegramId = {telegram_id};"""
-    
+
     result = db.pool.retry_operation_sync(db.execute_query)
 
     if len(result[0].rows) == 0:
         return None
-        
+
     user = make_user_object(result)
-    
+
     return user
 
 
 def set_telegram_id_by_id(id, telegram_id):
     db.query = f"""update Users set TelegramId = {telegram_id} where Id = {id} """
     result = db.pool.retry_operation_sync(db.execute_query)
-    #return result[0].rows
+    # return result[0].rows
 
 
 def user_reg_in_bot(update: Update):
@@ -102,7 +103,8 @@ def welcome_user(update: Update, user: User):
 
     update.message.reply_text(welcome_text)
 
-def get_user_access(user : User):
+
+def get_user_access(user: User):
     if user == None:
         return NO_REG
     if user.is_admin == True:
@@ -126,20 +128,22 @@ def make_user_object(result):
     is_tutor = result[0].rows[0].IsTutor
     is_student = result[0].rows[0].IsStudent
 
-    user = User(id = id, surname=surname, 
-            name=name, patronymic=patronymic, 
-            groups_id=groups_id, telegram_login=telegram_login,
-            telegram_id=telegram_id, is_connected_on_bot=is_connected_on_bot,
-            is_admin=is_admin, is_tutor=is_tutor,
-            is_student=is_student)
-    
+    user = User(id=id, surname=surname,
+                name=name, patronymic=patronymic,
+                groups_id=groups_id, telegram_login=telegram_login,
+                telegram_id=telegram_id, is_connected_on_bot=is_connected_on_bot,
+                is_admin=is_admin, is_tutor=is_tutor,
+                is_student=is_student)
+
     return user
+
 
 def is_user_admin_or_tutor(telegram_id) -> bool:
     user = get_user_by_telegram_id(telegram_id)
 
     user_access = get_user_access(user)
     return user_access == ADMIN or user_access == TUTOR
+
 
 """user = User(id = 1, surname='Hovrov', 
             name='Dima', patronymic='Evg', 

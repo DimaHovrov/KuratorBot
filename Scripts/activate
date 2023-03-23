@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Aplications\Python\Projects\kuratorBot\venv"
+VIRTUAL_ENV="C:\My files\Исходники проектов\Python\KuratorBot\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
