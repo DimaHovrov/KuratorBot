@@ -4,32 +4,23 @@ from telegram.ext import (Updater, Dispatcher, CommandHandler, MessageHandler,
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 import model.InfoMessage as info_message_module
 import utils.conversation_db as c_db
-import json
 import model.User as user_module
 
-# Паттерны каллбэков кнопок меню объявлений
-ALL_INFO_MESSAGES_PATTERN, TITLE_SEARCH_PATTERN, CATEGORY_SEARCH_PATTERN, ADD_INFO_MESSAGE_PATTERN, ADD_MESSAGE_CATEGORY_PATTERN = range(
-    5)
-
-# состояния converations
-
-# поиск по заголовкам и категориям состояния
-TITLE_SEARCH_STATE, CHOOSE_MESSAGE_STATE, CATEGORY_SEARCH_STATE, CHOOSE_CATEGORY_STATE = range(
-    4)
-
+import general.patterns_states as p_s
+import sud_messages.sud_messages as sud_messages
 
 MAX_DESC_LEN = 40
 
 keyboard_menu_messages_info_student = [
     [
         InlineKeyboardButton(
-            "Вывести весь список объявлений", callback_data=str(ADD_INFO_MESSAGE_PATTERN)),
+            "Вывести весь список объявлений", callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN)),
     ],
     [
         InlineKeyboardButton("Поиск по заголовкам",
-                             callback_data=str(TITLE_SEARCH_PATTERN)),
+                             callback_data=str(p_s.TITLE_SEARCH_PATTERN)),
         InlineKeyboardButton("Поиск по категориям",
-                             callback_data=str(CATEGORY_SEARCH_PATTERN))
+                             callback_data=str(p_s.CATEGORY_SEARCH_PATTERN))
     ],
 ]
 
@@ -37,31 +28,28 @@ keyboard_menu_messages_info_student = [
 keyboard_menu_messages_info_no_std = [
     [
         InlineKeyboardButton(
-            "Вывести весь список объявлений", callback_data=str(ADD_INFO_MESSAGE_PATTERN))
+            "Вывести весь список объявлений", callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN))
     ],
     [
         InlineKeyboardButton("Выбор объявления",
-                             callback_data=str(TITLE_SEARCH_PATTERN))
+                             callback_data=str(p_s.TITLE_SEARCH_PATTERN))
     ],
     [
         InlineKeyboardButton("Поиск по заголовкам",
-                             callback_data=str(TITLE_SEARCH_PATTERN)),
+                             callback_data=str(p_s.TITLE_SEARCH_PATTERN)),
         InlineKeyboardButton("Поиск по категориям",
-                             callback_data=str(CATEGORY_SEARCH_PATTERN))
+                             callback_data=str(p_s.CATEGORY_SEARCH_PATTERN))
     ],
     [
         InlineKeyboardButton("Создать объявление",
-                             callback_data=str(ADD_INFO_MESSAGE_PATTERN)),
+                             callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN)),
         InlineKeyboardButton("Создать категорию",
-                             callback_data=str(ADD_INFO_MESSAGE_PATTERN))
+                             callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN))
     ]
 ]
 
-keyboard_choosed_messaged_info = [[
-    InlineKeyboardButton("Отправить", callback_data='1'),
-    InlineKeyboardButton("Изменить", callback_data='2'),
-    InlineKeyboardButton("Удалить", callback_data='3')
-]]
+
+
 
 # inline callbacks
 
@@ -71,8 +59,7 @@ def title_search_icallback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
     query.message.reply_text('Введите заголовок')
-
-    return TITLE_SEARCH_STATE
+    return p_s.TITLE_SEARCH_STATE
 
 
 def category_search_icallback(update: Update, context: CallbackContext) -> None:
@@ -80,7 +67,7 @@ def category_search_icallback(update: Update, context: CallbackContext) -> None:
     query.answer()
     query.message.reply_text('Введите название категории')
 
-    return CATEGORY_SEARCH_STATE
+    return p_s.CATEGORY_SEARCH_STATE
 
 
 choose_command_info_message = '/message_'
@@ -113,7 +100,7 @@ def title_search_ccallback(update: Update, context: CallbackContext):
     context.user_data['title'] = title_text
     context.user_data['candidates_id'] = candidates
 
-    return CHOOSE_MESSAGE_STATE
+    return p_s.CHOOSE_MESSAGE_STATE
 
 
 def choose_message_ccallback(update: Update, context: CallbackContext):
@@ -128,7 +115,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
 
     if message_index.isdigit() == False or int(message_index) not in info_messages:
         update.message.reply_text('Команда не распознана. Попробуйте еще раз.')
-        return CHOOSE_MESSAGE_STATE
+        return p_s.CHOOSE_MESSAGE_STATE
     else:
         message_index = int(message_index)
         # db index
@@ -140,7 +127,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
     if choosed_message_object == None:
         update.message.reply_text(
             'Сообщение не найдено. Выберите сообщение заново')
-        return CHOOSE_MESSAGE_STATE
+        return p_s.CHOOSE_MESSAGE_STATE
 
     info_text_message = 'Заголовок: ' + choosed_message_object.title + '\n'
     info_text_message += 'Содержание' + choosed_message_object.message[:MAX_DESC_LEN] + (
@@ -151,7 +138,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
     reply_markup = ''
 
     if (user_module.is_user_admin_or_tutor(telegram_id)):
-        reply_markup = InlineKeyboardMarkup(keyboard_choosed_messaged_info)
+        reply_markup = InlineKeyboardMarkup(sud_messages.keyboard_choosed_messaged_info)
 
     update.message.reply_text(info_text_message, reply_markup=reply_markup)
 
@@ -184,7 +171,7 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     context.user_data['category'] = category_text
     context.user_data['candidates_id'] = candidates
 
-    return CHOOSE_MESSAGE_STATE
+    return p_s.CHOOSE_MESSAGE_STATE
 
 
 def choose_category_ccallback(update: Update, context: CallbackContext):

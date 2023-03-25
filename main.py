@@ -55,7 +55,6 @@ def main() -> None:
     bot.set_my_commands(commands)
     dispatcher = updater.dispatcher
     handlers.reg_handlers(dispatcher)
-
     updater.start_polling()
     updater.idle()
 

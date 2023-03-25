@@ -20,7 +20,8 @@ welcome_text = 'Я вас узнал. Ваши данные присутству
 goodbye_text = 'Я вас не узнал. Иди- ка ты нафиг!'
 
 credentials = ServiceAccountCredentials.from_file(get_sa_key_file())
-driver = ydb.Driver(endpoint=get_endpoint(), database=get_database(), credentials=credentials)
+driver = ydb.Driver(endpoint=get_endpoint(),
+                    database=get_database(), credentials=credentials)
 
 
 driver.wait(timeout=5)
@@ -48,21 +49,23 @@ def user_reg_in_bot(update: Update):
     else:
         update.message.reply_text(goodbye_text)
 
+
 query = ''
 
+
 def execute_query(session):
-        # create the transaction and execute query.
-        return session.transaction().execute(
-            query,
-            commit_tx = True,
-            settings = ydb.BaseRequestSettings().with_timeout(3).with_operation_timeout(2)
-        )
+    # create the transaction and execute query.
+    return session.transaction().execute(
+        query,
+        commit_tx=True,
+        settings=ydb.BaseRequestSettings().with_timeout(3).with_operation_timeout(2)
+    )
 
 
 def get_user_by_phone_number(phone_number):
     global query
     query = f"""select * from Users as user where user.PhoneNumber = "{phone_number}";"""
-    
+
     result = pool.retry_operation_sync(execute_query)
     return result[0].rows
 

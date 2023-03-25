@@ -78,4 +78,3 @@ class YdbPersistance(BasePersistence):
             db.query = f"""delete from UserData
                            where TelegramId = {user_id}"""
         db.pool.retry_operation_sync(db.execute_query)
-        print(data)
