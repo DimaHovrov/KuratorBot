@@ -154,7 +154,8 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     """Пользователь ввел категорию"""
 
     category_text = update.message.text
-    info_messages = info_message_module.get_info_messages_by_category(category_text)
+    info_messages = info_message_module.get_info_messages_by_category(
+        category_text)
 
     count_message = len(info_messages)
     if count_message == 0:

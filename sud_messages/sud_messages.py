@@ -59,7 +59,7 @@ def send_info_messages_after_icallback(update: Update, context: CallbackContext)
     for group_id in selected_groups:
         if not group_id:
             continue
-        telegram_ids = User.get_users_telegram_id_by_group_id(group_id)
+        telegram_ids = User.get_students_telegram_id_by_group_id(group_id)
 
         for telegram_id in telegram_ids:
             if not telegram_id:

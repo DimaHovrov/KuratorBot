@@ -110,10 +110,10 @@ def get_user_access(user: User):
         return STUDENT
 
 
-def get_users_telegram_id_by_group_id(group_id):
+def get_students_telegram_id_by_group_id(group_id):
     """Возвращает массив юзеров по айди группы"""
     db.query = f"""select TelegramId 
-                   from Users where GroupsId = {group_id}"""
+                   from Users where GroupsId = {group_id} and IsStudent=true"""
     result = db.pool.retry_operation_sync(db.execute_query)
     result = [item.get('TelegramId') for item in result[0].rows]
     return result
