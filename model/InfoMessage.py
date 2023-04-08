@@ -94,3 +94,27 @@ where b.Name = '{category_name}'; """
                                keywords=keywords, message=message,
                                title=title)
     return [info_message]
+
+def delete_info_message_by_id(info_message_id):
+    try:
+        db.query = f"""delete from InfoMessages 
+                    where id = {info_message_id}"""
+        
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return True
+    except Exception as exp:
+        return False
+
+
+def check_author_in_info_message(user_id, info_message_id):
+    db.query = f"""select AuthorId 
+                   from InfoMessages
+                   where id={info_message_id}"""
+    
+    result = db.pool.retry_operation_sync(db.execute_query)
+
+    author_id = None if len(result[0].rows) == 0 else result[0].rows[0].AuthorId
+    return author_id == user_id
+
+
+

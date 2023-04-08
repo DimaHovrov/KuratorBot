@@ -4,6 +4,7 @@ from telegram.ext import (Updater, Dispatcher, CommandHandler, MessageHandler,
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 
 import model.User as user_module
+import model.InfoMessage as InfoMessage
 import model as m
 import re
 
@@ -80,9 +81,15 @@ def reg_handlers(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.send_info_messages_icallback, pattern="^" + str(p_s.SEND_MESSAGE_PATTERN) + "$"))
     dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.delete_info_messages_icallback, pattern="^" + str(p_s.DELETE_MESSAGE_PATTERN) + "$"))
+    dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.delete_info_messages_icallback, pattern="^" + str(p_s.DELETE_MESSAGE_PATTERN) + "$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
     dispatcher.add_handler(conv_handler_title_search)
     dispatcher.add_handler(conv_handler_category_search)
     dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))

@@ -115,7 +115,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
         choosed_message_command)]
     info_messages = context.user_data['candidates_id']
 
-    if message_index.isdigit() == False or int(message_index) not in info_messages:
+    if message_index.isdigit() == False:
         update.message.reply_text('Команда не распознана. Попробуйте еще раз.')
         return p_s.CHOOSE_MESSAGE_STATE
     else:

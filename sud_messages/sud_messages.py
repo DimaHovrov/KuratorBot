@@ -1,7 +1,7 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import (Updater, Dispatcher, CommandHandler, MessageHandler,
                           CallbackContext, Filters, CallbackQueryHandler, ConversationHandler, ContextTypes)
-from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 
 import re
 import general.patterns_states as p_s
@@ -9,6 +9,9 @@ import model.Group as Group
 import model.User as User
 import model.InfoMessage as InfoMessage
 from functools import cache
+
+prefix_group_pattern = "group "
+prefix_question_delete_pattern = "q_delete "  # question_delete
 
 keyboard_choosed_messaged_info = [[
     InlineKeyboardButton(
@@ -19,8 +22,14 @@ keyboard_choosed_messaged_info = [[
         p_s.DELETE_MESSAGE_PATTERN))
 ]]
 
-prefix_group_pattern = "group "
-max_count_buttons_in_line = 4
+# кнопка уточнения удаления
+keyboard_question_delete = [[InlineKeyboardButton(
+    "Да", callback_data=prefix_question_delete_pattern + str(p_s.YES_DELETE_PATTERN)),
+    InlineKeyboardButton("Нет", callback_data=prefix_question_delete_pattern + str(
+        p_s.NO_DELETE_PATTERN))]]
+
+
+max_count_buttons_in_line = 4  # максимальное количество кнопок в одной строке
 
 
 def select_groups_icalback(update: Update, context: CallbackContext):
@@ -36,7 +45,31 @@ def select_groups_icalback(update: Update, context: CallbackContext):
     query.edit_message_reply_markup(reply_markup=reply_markup)
 
 
+def question_delete_icallback(update: Update, context: CallbackContext):
+    """Срабатывает когда юзер нажимает Да или нет при вопросе о удалении"""
+    query = update.callback_query
+    query.answer()
+    result = int(re.findall("[0-9]+", query.data)[0])
+    
+    current_message = query.message.text
+    info_message_id = context.user_data['choosed_info_message_id']
+    if result == p_s.YES_DELETE_PATTERN:
+        delete_result = InfoMessage.delete_info_message_by_id(info_message_id)
+
+        if delete_result:
+            new_message = current_message.rsplit('\n', 1)[0] + '\nСообщение успешно удалено'
+            query.message.edit_text(text=new_message)
+        else:
+            new_message = current_message.rsplit('\n', 1)[0] + '\nВозникло какая-то ошибка'
+            query.message.reply_text(text=new_message)
+    else:
+        new_message = "\n".join(current_message.split("\n")[:-2])
+        reply_markup = InlineKeyboardMarkup(keyboard_choosed_messaged_info)
+        query.message.edit_text(text=new_message, reply_markup=reply_markup)
+
+
 def send_info_messages_icallback(update: Update, context: CallbackContext):
+    """Когда юзер нажимает кнопку Отправить после выбора сообщения"""
     global groups_keyboard
     query = update.callback_query
     query.answer()
@@ -45,6 +78,26 @@ def send_info_messages_icallback(update: Update, context: CallbackContext):
         update_inline_keyboard_groups(context.user_data['selected_group']))
     query.message.reply_text(
         'Выберите группы на которые хотите отправить сообщение', reply_markup=reply_markup)
+
+
+def delete_info_messages_icallback(update: Update, context: CallbackContext):
+    """Когда юзер нажимает кнопку Удалить после выбора сообщения"""
+    query = update.callback_query
+    query.answer()
+
+    telegram_id = query.from_user.id
+    current_user = User.get_user_by_telegram_id(telegram_id)
+    choosed_message_id = context.user_data["choosed_info_message_id"]
+
+    is_author = InfoMessage.check_author_in_info_message(
+        current_user.id, choosed_message_id)
+    if is_author == False:
+        update.message.reply_text(text="У вас нет доступа на удаление")
+        return
+
+    edit_message = query.message.text + '\n\n' + "Вы точно хотите удалить?"
+    reply_markup = InlineKeyboardMarkup(keyboard_question_delete)
+    query.edit_message_text(text=edit_message, reply_markup=reply_markup)
 
 
 def send_info_messages_after_icallback(update: Update, context: CallbackContext):
