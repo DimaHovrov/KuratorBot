@@ -2,8 +2,7 @@
 
 import test
 import db.query_db as db
-from telegram import Update
-
+from telegram import Update, ReplyKeyboardRemove
 
 welcome_text = 'Я вас узнал. Ваши данные присутствуют в базе, поэтому у вас есть доступ к командам данного бота'
 goodbye_text = 'Я вас не узнал. Иди- ка ты нафиг!'
@@ -48,7 +47,7 @@ def user_reg_in_bot(update: Update):
     if user != None:
         welcome_user(update, user)
     else:
-        update.message.reply_text(goodbye_text)
+        update.message.reply_text(goodbye_text, reply_markup=ReplyKeyboardRemove())
 
 
 def get_user_by_phone_number(phone_number):
@@ -84,24 +83,12 @@ def set_telegram_id_by_id(id, telegram_id):
     # return result[0].rows
 
 
-def user_reg_in_bot(update: Update):
-    """ проверка на существование юзера в бд"""
-    contact = update.message.contact
-    phone_number = contact.phone_number
-    result = get_user_by_phone_number(phone_number)
-
-    if result != None:
-        welcome_user(update, result)
-    else:
-        update.message.reply_text(goodbye_text)
-
-
 def welcome_user(update: Update, user: User):
     Id = user.id
     telegram_id = update.message.from_user.id
     set_telegram_id_by_id(Id, telegram_id)
 
-    update.message.reply_text(welcome_text)
+    update.message.reply_text(welcome_text, reply_markup=ReplyKeyboardRemove())
 
 
 def get_user_access(user: User):

@@ -11,6 +11,7 @@ import menus.info_messages_menu as info_messages_menu
 import sud_messages.sud_messages as sud_messages
 import general.patterns_states as p_s
 
+
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
         [[KeyboardButton('Share contact', request_contact=True)]], resize_keyboard=True)
@@ -164,9 +165,12 @@ def reg_handlers(dispatcher):
         name='CATEGORY_SEARCH_CONVERSATION',
         persistent=True
     )
-    dispatcher.add_handler(CallbackQueryHandler(sud_messages.send_info_messages_icallback, pattern="^" + str(p_s.SEND_MESSAGE_PATTERN) + "$"))
-    dispatcher.add_handler(CallbackQueryHandler(sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
-    dispatcher.add_handler(CallbackQueryHandler(sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.send_info_messages_icallback, pattern="^" + str(p_s.SEND_MESSAGE_PATTERN) + "$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
     dispatcher.add_handler(conv_handler_title_search)
     dispatcher.add_handler(conv_handler_category_search)
     dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))
