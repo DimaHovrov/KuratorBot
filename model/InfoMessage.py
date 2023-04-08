@@ -54,7 +54,7 @@ def get_info_messages_by_title(title_text):
     result = db.pool.retry_operation_sync(db.execute_query)
 
     if (len(result[0].rows) == 0):
-        return None
+        return []
 
     id = result[0].rows[0].id
     category_id = result[0].rows[0].CategoryId
@@ -66,7 +66,7 @@ def get_info_messages_by_title(title_text):
                                keywords=keywords, message=message,
                                title=title)
 
-    return info_message
+    return [info_message]
 
 
 def get_info_messages_by_category(category_name):
@@ -82,7 +82,7 @@ where b.Name = '{category_name}'; """
     result = db.pool.retry_operation_sync(db.execute_query)
 
     if (len(result[0].rows) == 0):
-        return None
+        return []
 
     id = result[0].rows[0].id
     category_id = result[0].rows[0].CategoryId
@@ -93,4 +93,4 @@ where b.Name = '{category_name}'; """
     info_message = InfoMessage(id=id, category_id=category_id,
                                keywords=keywords, message=message,
                                title=title)
-    return info_message
+    return [info_message]

@@ -49,8 +49,6 @@ keyboard_menu_messages_info_no_std = [
 ]
 
 
-
-
 # inline callbacks
 
 
@@ -79,11 +77,15 @@ def title_search_ccallback(update: Update, context: CallbackContext):
     """Пользователь ввел заголовок поиска"""
     title_text = update.message.text
 
-    info_messages = [
-        info_message_module.get_info_messages_by_title(title_text)]
+    info_messages = info_message_module.get_info_messages_by_title(title_text)
+    count_message = len(info_messages)
+
+    if count_message == 0:
+        update.message.reply_text("Объявление с таким заголовком не найден")
+        return p_s.TITLE_SEARCH_STATE
 
     new_message = ''
-    for i in range(len(info_messages)):
+    for i in range(count_message):
         if info_messages[i] == None:
             continue
 
@@ -138,7 +140,8 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
     reply_markup = ''
 
     if (user_module.is_user_admin_or_tutor(telegram_id)):
-        reply_markup = InlineKeyboardMarkup(sud_messages.keyboard_choosed_messaged_info)
+        reply_markup = InlineKeyboardMarkup(
+            sud_messages.keyboard_choosed_messaged_info)
 
     update.message.reply_text(info_text_message, reply_markup=reply_markup)
 
@@ -151,11 +154,16 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     """Пользователь ввел категорию"""
 
     category_text = update.message.text
-    info_messages = [
-        info_message_module.get_info_messages_by_category(category_text)]
+    info_messages = info_message_module.get_info_messages_by_category(category_text)
+
+    count_message = len(info_messages)
+    if count_message == 0:
+        update.message.reply_text("Объявление с таким заголовком не найден")
+        return p_s.CATEGORY_SEARCH_STATE
 
     new_message = ''
-    for i in range(len(info_messages)):
+
+    for i in range(count_message):
         if info_messages[i] == None:
             continue
         title = info_messages[i].title
