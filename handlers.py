@@ -47,71 +47,6 @@ def contact_user(update: Update, context: CallbackContext) -> None:
     user_module.user_reg_in_bot(update)
 
 
-def send_info_message(update: Update, context: CallbackContext) -> None:
-    result = m.get_all_info_messages()
-
-    send_info_message = ''
-    for info_message in result:
-        id = info_message.id
-        message = info_message.Message
-        title = info_message.Title
-        command = f'/message_{id}'
-
-        if (len(message) > 30):
-            short_message = ''
-            for i in range(30):
-                short_message += message[i]
-            message = short_message + '...'
-
-        send_info_message += f"{str(id)}. {title} \n {message}\n {command}\n\n"
-    update.message.reply_text(send_info_message)
-
-
-def select_info_message(update: Update, context: CallbackContext) -> None:
-    command = update.message.text
-    result = re.match(r'\/message_[0-9]+', command)
-
-    if result is None:
-        update.message.reply_text('Такой команды нет!')
-
-    start = result.start() + 9
-    end = result.end()
-
-    id = ''
-
-    for i in range(start, end):
-        id += command[i]
-
-    info_message = m.get_info_message_by_id(int(id))
-
-    if len(info_message) == 0:
-        update.message.reply_text('Такого сообщения нет')
-        return
-
-    message = info_message[0].Message
-    title = info_message[0].Title
-
-    if (len(message) > 30):
-        short_message = ''
-        for i in range(30):
-            short_message += message[i]
-        message = short_message + '...'
-
-    send_info_message = f"{str(id)}. {title} \n {message}\n"
-
-    keyboard = [
-        [
-            InlineKeyboardButton("Option 1", callback_data="1"),
-            InlineKeyboardButton("Option 2", callback_data="2"),
-        ],
-        [InlineKeyboardButton("Option 3", callback_data="3")],
-    ]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    update.message.reply_text(send_info_message, reply_markup=reply_markup)
-
-
 def button(update: Update, context: CallbackContext) -> None:
     """Parses the CallbackQuery and updates the message text."""
     query = update.callback_query
@@ -135,8 +70,6 @@ def button(update: Update, context: CallbackContext) -> None:
 
 def reg_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler(
-        "send_info_message", send_info_message))
     dispatcher.add_handler(CommandHandler(
         "menu_messages_info", menu_messages_info))
 
