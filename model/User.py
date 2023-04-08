@@ -115,6 +115,15 @@ def get_user_access(user: User):
         return STUDENT
 
 
+def get_users_telegram_id_by_group_id(group_id):
+    """Возвращает массив юзеров по айди группы"""
+    db.query = f"""select TelegramId 
+                   from Users where GroupsId = {group_id}"""
+    result = db.pool.retry_operation_sync(db.execute_query)
+    result = [item.get('TelegramId') for item in result[0].rows]
+    return result
+
+
 def make_user_object(result):
     id = result[0].rows[0].Id
     surname = result[0].rows[0].Surname

@@ -165,7 +165,8 @@ def reg_handlers(dispatcher):
         persistent=True
     )
     dispatcher.add_handler(CallbackQueryHandler(sud_messages.send_info_messages_icallback, pattern="^" + str(p_s.SEND_MESSAGE_PATTERN) + "$"))
-    dispatcher.add_handler(CallbackQueryHandler(sud_messages.select_groups_icalback, pattern="^group [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
     dispatcher.add_handler(conv_handler_title_search)
     dispatcher.add_handler(conv_handler_category_search)
     dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))
