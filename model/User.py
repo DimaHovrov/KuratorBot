@@ -38,16 +38,32 @@ class User:
         self.is_student = kwargs['is_student']
 
 
-def user_reg_in_bot(update: Update):
-    """ проверка на регистрацию юзера """
-    contact = update.message.contact
+def user_reg_in_bot_by_contact(contact):
+    """ проверка на существование в базе юзера"""
     phone_number = contact.phone_number
     user = get_user_by_phone_number(phone_number)
 
-    if user != None:
+    return user
+
+
+def welcome_user(update: Update, user: User):
+    Id = user.id
+    telegram_id = update.message.from_user.id
+    set_telegram_id_by_id(Id, telegram_id)
+
+    update.message.reply_text(welcome_text, reply_markup=ReplyKeyboardRemove())
+
+
+def register_user_on_bot(update: Update):
+    """Проверяет на существования юзера в бд. Если есть регает иначе посылает подальше"""
+    contact = update.message.contact
+    user = user_reg_in_bot_by_contact(contact)
+
+    if user is not None:
         welcome_user(update, user)
     else:
-        update.message.reply_text(goodbye_text, reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text(
+            goodbye_text, reply_markup=ReplyKeyboardRemove())
 
 
 def get_user_by_phone_number(phone_number):
@@ -81,14 +97,6 @@ def set_telegram_id_by_id(id, telegram_id):
     db.query = f"""update Users set TelegramId = {telegram_id} where Id = {id} """
     result = db.pool.retry_operation_sync(db.execute_query)
     # return result[0].rows
-
-
-def welcome_user(update: Update, user: User):
-    Id = user.id
-    telegram_id = update.message.from_user.id
-    set_telegram_id_by_id(Id, telegram_id)
-
-    update.message.reply_text(welcome_text, reply_markup=ReplyKeyboardRemove())
 
 
 def get_user_access(user: User):

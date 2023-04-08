@@ -44,28 +44,7 @@ def menu_messages_info(update: Update, context: CallbackContext) -> None:
 
 def contact_user(update: Update, context: CallbackContext) -> None:
     print(update.message.contact.phone_number)
-    user_module.user_reg_in_bot(update)
-
-
-def button(update: Update, context: CallbackContext) -> None:
-    """Parses the CallbackQuery and updates the message text."""
-    query = update.callback_query
-
-    # CallbackQueries need to be answered, even if no notification to the user is needed
-    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
-    query.answer()
-
-    keyboard = [
-        [
-            InlineKeyboardButton("Option 1 selected", callback_data="1"),
-            InlineKeyboardButton("Option 2", callback_data="2"),
-        ],
-        [InlineKeyboardButton("Option 3", callback_data="3")],
-    ]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    query.edit_message_reply_markup(reply_markup=reply_markup)
+    user_module.register_user_on_bot(update)
 
 
 def reg_handlers(dispatcher):
