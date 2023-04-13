@@ -5,7 +5,6 @@ from telegram import Update, InlineKeyboardMarkup
 
 import model.User as user_module
 
-import menus.info_messages_menu as info_messages_menu
 import sud_messages.sud_messages as sud_messages
 import general.patterns_states as p_s
 import general.keyboards as keyboards
