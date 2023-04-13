@@ -8,6 +8,7 @@ import model.User as user_module
 import menus.info_messages_menu as info_messages_menu
 import sud_messages.sud_messages as sud_messages
 import general.patterns_states as p_s
+import general.keyboards as keyboards
 import general.conversation_handlers as conversations
 
 
@@ -32,10 +33,10 @@ def menu_messages_info(update: Update, context: CallbackContext) -> None:
 
     if (user_access == user_module.ADMIN or user_access == user_module.TUTOR):
         reply_markup = InlineKeyboardMarkup(
-            info_messages_menu.keyboard_menu_messages_info_no_std)
+            keyboards.keyboard_menu_messages_info_no_std)
     else:
         reply_markup = InlineKeyboardMarkup(
-            info_messages_menu.keyboard_menu_messages_info_student)
+            keyboards.keyboard_menu_messages_info_student)
 
     update.message.reply_text(title_menu_messages_info,
                               reply_markup=reply_markup)
