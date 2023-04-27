@@ -16,7 +16,7 @@ conv_handler_title_search = ConversationHandler(
         p_s.TITLE_SEARCH_STATE: [MessageHandler(Filters.text, info_messages_search.title_search_ccallback)],
         p_s.CHOOSE_MESSAGE_STATE: [MessageHandler(Filters.regex("^/message_[0-9]+$"), info_messages_search.choose_message_ccallback)],
     },
-    fallbacks=[CommandHandler("cancel", info_messages_search.cancel)],
+    fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
     name='TITLE_SEARCH_CONVERSATION',
     persistent=True
 )
@@ -30,12 +30,12 @@ conv_handler_category_search = ConversationHandler(
         p_s.CATEGORY_SEARCH_STATE: [MessageHandler(Filters.text, info_messages_search.category_search_ccallback)],
         p_s.CHOOSE_MESSAGE_STATE: [MessageHandler(Filters.regex("^/message_[0-9]+$"), info_messages_search.choose_message_ccallback)],
     },
-    fallbacks=[CommandHandler("cancel", info_messages_search.cancel)],
+    fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
     name='CATEGORY_SEARCH_CONVERSATION',
     persistent=True
 )
 
-
+# конверсейшн добавления объявления
 conv_handler_add_info_messages = ConversationHandler(
     entry_points=[CallbackQueryHandler(
         info_messages_add.add_info_message_icallback, pattern="^" +
@@ -43,7 +43,7 @@ conv_handler_add_info_messages = ConversationHandler(
     )],
     states={
         p_s.TITLE_ENTER_STATE: [MessageHandler(Filters.text, info_messages_add.title_enter_ccallback)],
-        p_s.CATEGORY_ENTER_STATE: [MessageHandler(Filters.text, info_messages_add.category_enter_ccallback)],
+        p_s.CATEGORY_ENTER_STATE: [MessageHandler(Filters.regex("^/category_[0-9]+$"), info_messages_add.category_enter_ccallback)],
         p_s.CONTENT_ENTER_STATE: [MessageHandler(Filters.text, info_messages_add.content_enter_ccallback)],
     },
     fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],

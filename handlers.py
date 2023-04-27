@@ -6,6 +6,9 @@ from telegram import Update, InlineKeyboardMarkup
 import model.User as user_module
 
 import sud_messages.sud_messages as sud_messages
+
+import menus.get_messages_menu as get_messages_menu
+
 import general.patterns_states as p_s
 import general.keyboards as keyboards
 import general.conversation_handlers as conversations
@@ -71,9 +74,14 @@ def reg_callback_querys(dispatcher):
         sud_messages.delete_info_messages_icallback, pattern="^" + str(p_s.DELETE_MESSAGE_PATTERN) + "$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        get_messages_menu.get_all_messages_ccallback, pattern="^" + str(p_s.ALL_INFO_MESSAGES_PATTERN) + "$"))
 
 
 def reg_conversations(dispatcher):
     dispatcher.add_handler(conversations.conv_handler_title_search)
     dispatcher.add_handler(conversations.conv_handler_category_search)
+    dispatcher.add_handler(conversations.conv_handler_add_info_messages)
     dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))

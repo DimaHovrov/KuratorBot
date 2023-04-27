@@ -1,9 +1,8 @@
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import (Updater, Dispatcher, CommandHandler, MessageHandler,
-                          CallbackContext, Filters, CallbackQueryHandler, ConversationHandler, ContextTypes)
-from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import update
+from telegram.ext import (
+    CallbackContext,  ConversationHandler)
+from telegram import Bot, Update, InlineKeyboardMarkup
 import model.InfoMessage as info_message_module
-import utils.conversation_db as c_db
 import model.User as user_module
 
 import general.patterns_states as p_s
@@ -76,7 +75,6 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
 
     message_index = choosed_message_command[len_command:len(
         choosed_message_command)]
-    info_messages = context.user_data['candidates_id']
 
     if message_index.isdigit() == False:
         update.message.reply_text('Команда не распознана. Попробуйте еще раз.')
@@ -144,16 +142,6 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     context.user_data['candidates_id'] = candidates
 
     return p_s.CHOOSE_MESSAGE_STATE
-
-
-def choose_category_ccallback(update: Update, context: CallbackContext):
-    update.message.reply_text('Текст')
-    return ConversationHandler.END
-
-
-def cancel(update: Update, context: CallbackContext):
-    update.message.reply_text('Мне очень жаль')
-    return ConversationHandler.END
 
 
 def get_ids_messages(info_messages):

@@ -119,7 +119,7 @@ def send_info_messages_after_icallback(update: Update, context: CallbackContext)
                 continue
             query.bot.send_message(
                 chat_id=telegram_id, text=info_message_text)
-
+    
     query.message.reply_text(text="Сообщение успешно отправилось")
 
 

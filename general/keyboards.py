@@ -4,7 +4,7 @@ import general.patterns_states as p_s
 keyboard_menu_messages_info_student = [
     [
         InlineKeyboardButton(
-            "Вывести весь список объявлений", callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN)),
+            "Вывести весь список объявлений", callback_data=str(p_s.ALL_INFO_MESSAGES_PATTERN)),
     ],
     [
         InlineKeyboardButton("Поиск по заголовкам",
@@ -18,7 +18,7 @@ keyboard_menu_messages_info_student = [
 keyboard_menu_messages_info_no_std = [
     [
         InlineKeyboardButton(
-            "Вывести весь список объявлений", callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN))
+            "Вывести весь список объявлений", callback_data=str(p_s.ALL_INFO_MESSAGES_PATTERN))
     ],
     [
         InlineKeyboardButton("Выбор объявления",

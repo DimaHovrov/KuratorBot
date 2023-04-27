@@ -95,11 +95,33 @@ where b.Name = '{category_name}'; """
                                title=title)
     return [info_message]
 
+
+def add_info_message(info_message: InfoMessage):
+    try:
+        id = int(get_max_id()) + 1
+        author_id = 1
+        category_id = info_message.category_id
+        keywords = ""
+        message = info_message.message
+        title = info_message.title
+
+        print(id , author_id, category_id, message, title)
+        db.query = f"""insert into InfoMessages(id, AuthorId, 
+                       CategoryId, Keywords, Message, Title) 
+                    values ({id},{author_id}, {category_id}, '{keywords}',
+                            '{message}','{title}')"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return True
+    except Exception as exp:
+        print(exp)
+        return False
+
+
 def delete_info_message_by_id(info_message_id):
     try:
         db.query = f"""delete from InfoMessages 
                     where id = {info_message_id}"""
-        
+
         result = db.pool.retry_operation_sync(db.execute_query)
         return True
     except Exception as exp:
@@ -110,11 +132,15 @@ def check_author_in_info_message(user_id, info_message_id):
     db.query = f"""select AuthorId 
                    from InfoMessages
                    where id={info_message_id}"""
-    
+
     result = db.pool.retry_operation_sync(db.execute_query)
 
-    author_id = None if len(result[0].rows) == 0 else result[0].rows[0].AuthorId
+    author_id = None if len(
+        result[0].rows) == 0 else result[0].rows[0].AuthorId
     return author_id == user_id
 
 
-
+def get_max_id():
+    db.query = f"""select max(id) as id from InfoMessages"""
+    result = db.pool.retry_operation_sync(db.execute_query)
+    return result[0].rows[0].id
