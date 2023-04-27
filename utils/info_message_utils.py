@@ -1,0 +1,32 @@
+import model.InfoMessage as InfoMessage
+
+MAX_DESC_LEN = 100
+
+choose_command_info_message = '/message_'
+
+
+def convert_model_to_message(info_message: InfoMessage):
+    info_text_message = 'Заголовок: ' + info_message.title + '\n'
+    info_text_message += 'Содержание:\n' + info_message.message
+
+    return info_text_message
+
+
+def convert_model_to_message_short(info_message: InfoMessage):
+    info_text_message = 'Заголовок: ' + info_message.title + '\n'
+    info_text_message += 'Содержание:\n' + info_message.message[:MAX_DESC_LEN] + (
+        info_message.message[:MAX_DESC_LEN] and '...')
+
+    return info_text_message
+
+
+def convert_models_to_message_short(info_messages):
+    info_text_message = ''
+    i = 1
+    for info_message in info_messages:
+        info_text_message += str(
+            i) + '. ' + convert_model_to_message_short(
+            info_message) + '\n'
+        info_text_message += choose_command_info_message + str(i) + '\n\n'
+        i += 1
+    return info_text_message

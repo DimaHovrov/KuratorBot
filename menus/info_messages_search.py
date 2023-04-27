@@ -7,6 +7,7 @@ import model.User as user_module
 
 import general.patterns_states as p_s
 import sud_messages.sud_messages as sud_messages
+import utils.info_message_utils as info_message_utils
 
 MAX_DESC_LEN = 40
 
@@ -51,12 +52,9 @@ def title_search_ccallback(update: Update, context: CallbackContext):
         if info_messages[i] == None:
             continue
 
-        title = info_messages[i].title
-        new_message = str(i+1) + '.' + title + '\n'
-        short_desc = info_messages[i].message[:MAX_DESC_LEN] + \
-            (info_messages[i].message[:MAX_DESC_LEN] and '...')
-        new_message += short_desc + '\n'
-        new_message += choose_command_info_message + str(i+1)
+        new_message = str(
+            i+1) + '. '+info_message_utils.convert_model_to_message_short(info_messages[i]) + '\n'
+        new_message += choose_command_info_message + str(i+1) + '\n'
     update.message.reply_text(new_message)
 
     candidates = get_ids_messages(info_messages)
@@ -92,9 +90,8 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
             'Сообщение не найдено. Выберите сообщение заново')
         return p_s.CHOOSE_MESSAGE_STATE
 
-    info_text_message = 'Заголовок: ' + choosed_message_object.title + '\n'
-    info_text_message += 'Содержание' + choosed_message_object.message[:MAX_DESC_LEN] + (
-        choosed_message_object.message[:MAX_DESC_LEN] and '...')
+    info_text_message = info_message_utils.convert_model_to_message_short(
+        choosed_message_object)
 
     telegram_id = update.message.from_user.id
 
@@ -128,12 +125,9 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     for i in range(count_message):
         if info_messages[i] == None:
             continue
-        title = info_messages[i].title
-        new_message = str(i+1) + '.' + title + '\n'
-        short_desc = info_messages[i].message[:MAX_DESC_LEN] + \
-            (info_messages[i].message[:MAX_DESC_LEN] and '...')
-        new_message += short_desc + '\n'
-        new_message += choose_command_info_message + str(i+1)
+        new_message = str(
+            i+1) + '. ' + info_message_utils.convert_model_to_message_short(info_messages[i]) + '\n'
+        new_message += choose_command_info_message + str(i+1) + '\n'
 
     update.message.reply_text(new_message)
     candidates = get_ids_messages(info_messages)

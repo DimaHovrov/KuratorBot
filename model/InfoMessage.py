@@ -25,7 +25,17 @@ info_message = InfoMessage(id=1, category_id=1,
 def get_all_info_messages():
     db.query = f"""select * from InfoMessages"""
     result = db.pool.retry_operation_sync(db.execute_query)
-    return result[0].rows
+    info_messages = []
+    for row in result[0].rows:
+        id = row.id
+        category_id = row.CategoryId
+        keywords = row.Keywords
+        message = row.Message
+        title = row.Title
+        info_messages.append(InfoMessage(id=id, category_id=category_id,
+                               keywords=keywords, message=message,
+                               title=title))
+    return info_messages
 
 
 def get_info_message_by_id(id):
@@ -105,7 +115,7 @@ def add_info_message(info_message: InfoMessage):
         message = info_message.message
         title = info_message.title
 
-        print(id , author_id, category_id, message, title)
+        print(id, author_id, category_id, message, title)
         db.query = f"""insert into InfoMessages(id, AuthorId, 
                        CategoryId, Keywords, Message, Title) 
                     values ({id},{author_id}, {category_id}, '{keywords}',
