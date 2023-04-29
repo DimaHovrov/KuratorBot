@@ -5,6 +5,7 @@ from telegram.ext import (CommandHandler, MessageHandler,
 import menus.info_messages_search as info_messages_search
 import menus.info_messages_add as info_messages_add
 import menus.info_messages_menu as info_messages_menu
+import menus.info_messages_add_categorys as info_messages_add_categorys
 import general.patterns_states as p_s
 
 # конверсейшн поиска сообщения по заголовку
@@ -48,5 +49,21 @@ conv_handler_add_info_messages = ConversationHandler(
     },
     fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
     name='ADD_INFO_MESSAGES_CONVERSATION',
+    persistent=True
+)
+
+
+# конверсейшн добавления категории
+conv_handler_add_category = ConversationHandler(
+    entry_points=[CallbackQueryHandler(
+        info_messages_add_categorys.add_categorys_icallback, pattern="^" +
+        str(p_s.ADD_MESSAGE_CATEGORY_PATTERN) + "$"
+    )],
+    states={
+        p_s.ADD_CATEGORY_ENTER_STATE: [MessageHandler(
+            Filters.text, info_messages_add_categorys.category_name_ccallback)]
+    },
+    fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
+    name='ADD_CATEGORYS_CONVERSATION',
     persistent=True
 )

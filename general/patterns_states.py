@@ -9,7 +9,7 @@
 
  YES_DELETE_PATTERN, NO_DELETE_PATTERN,
  # Отмена Назад
- BACK_PATTERN, CANCEL_PATTERN
+ BACK_PATTERN, CANCEL_PATTERN,
  ) = range(12)
 
 # состояния converations
@@ -19,4 +19,7 @@
  CATEGORY_SEARCH_STATE, CHOOSE_CATEGORY_STATE,
  # создание объявления
  TITLE_ENTER_STATE, CATEGORY_ENTER_STATE,
- CONTENT_ENTER_STATE) = range(1, 8)
+ CONTENT_ENTER_STATE,
+ # создание категории
+ ADD_CATEGORY_ENTER_STATE
+ ) = range(1, 9)

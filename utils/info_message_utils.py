@@ -1,3 +1,4 @@
+from telegram.ext import (CallbackContext)
 import model.InfoMessage as InfoMessage
 
 MAX_DESC_LEN = 100
@@ -29,4 +30,19 @@ def convert_models_to_message_short(info_messages):
             info_message) + '\n'
         info_text_message += choose_command_info_message + str(i) + '\n\n'
         i += 1
+    return info_text_message
+
+
+def convert_models_to_message_short(info_messages, context: CallbackContext, data_name='candidates_id'):
+    info_text_message = ''
+    i = 1
+    context.user_data[data_name] = []
+    for info_message in info_messages:
+        info_text_message += str(
+            i) + '. ' + convert_model_to_message_short(
+            info_message) + '\n'
+        info_text_message += choose_command_info_message + str(i) + '\n\n'
+        context.user_data[data_name].append(info_message.id)
+        i += 1
+
     return info_text_message

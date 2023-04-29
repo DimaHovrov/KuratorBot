@@ -34,6 +34,6 @@ keyboard_menu_messages_info_no_std = [
         InlineKeyboardButton("Создать объявление",
                              callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN)),
         InlineKeyboardButton("Создать категорию",
-                             callback_data=str(p_s.ADD_INFO_MESSAGE_PATTERN))
+                             callback_data=str(p_s.ADD_MESSAGE_CATEGORY_PATTERN))
     ]
 ]

@@ -8,6 +8,7 @@ import model.User as user_module
 import sud_messages.sud_messages as sud_messages
 
 import menus.get_messages_menu as get_messages_menu
+import menus.info_messages_search as info_messages_search
 
 import general.patterns_states as p_s
 import general.keyboards as keyboards
@@ -53,7 +54,7 @@ def reg_handlers(dispatcher):
     reg_commands(dispatcher)
     reg_callback_querys(dispatcher)
     reg_conversations(dispatcher)
-
+    reg_message_handlers(dispatcher)
 
 def reg_commands(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
@@ -85,3 +86,9 @@ def reg_conversations(dispatcher):
     dispatcher.add_handler(conversations.conv_handler_category_search)
     dispatcher.add_handler(conversations.conv_handler_add_info_messages)
     dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))
+    dispatcher.add_handler(conversations.conv_handler_add_category)
+
+
+def reg_message_handlers(dispatcher):
+    dispatcher.add_handler(MessageHandler(Filters.regex(
+        "^/message_[0-9]+$"), info_messages_search.choose_message_ccallback))

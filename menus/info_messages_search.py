@@ -90,7 +90,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
             'Сообщение не найдено. Выберите сообщение заново')
         return p_s.CHOOSE_MESSAGE_STATE
 
-    info_text_message = info_message_utils.convert_model_to_message_short(
+    info_text_message = info_message_utils.convert_model_to_message(
         choosed_message_object)
 
     telegram_id = update.message.from_user.id
@@ -117,7 +117,7 @@ def category_search_ccallback(update: Update, context: CallbackContext):
 
     count_message = len(info_messages)
     if count_message == 0:
-        update.message.reply_text("Объявление с таким заголовком не найден")
+        update.message.reply_text("Объявление с такой категорией не найден")
         return p_s.CATEGORY_SEARCH_STATE
 
     new_message = ''

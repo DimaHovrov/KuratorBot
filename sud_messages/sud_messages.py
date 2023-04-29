@@ -74,6 +74,8 @@ def send_info_messages_icallback(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
 
+    context.user_data['selected_group'] = []
+    
     reply_markup = InlineKeyboardMarkup(
         update_inline_keyboard_groups(context.user_data['selected_group']))
     query.message.reply_text(
