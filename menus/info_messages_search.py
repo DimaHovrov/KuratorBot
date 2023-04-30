@@ -66,8 +66,6 @@ def title_search_ccallback(update: Update, context: CallbackContext):
 
 
 def choose_message_ccallback(update: Update, context: CallbackContext):
-    """Пользователь выбрал сообщение"""
-
     choosed_message_command = update.message.text
     len_command = len(choose_command_info_message)
 

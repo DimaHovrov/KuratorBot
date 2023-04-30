@@ -33,8 +33,8 @@ def get_all_info_messages():
         message = row.Message
         title = row.Title
         info_messages.append(InfoMessage(id=id, category_id=category_id,
-                               keywords=keywords, message=message,
-                               title=title))
+                                         keywords=keywords, message=message,
+                                         title=title))
     return info_messages
 
 
@@ -82,29 +82,30 @@ def get_info_messages_by_title(title_text):
 def get_info_messages_by_category(category_name):
     # добавить поиск по расстоянию
     db.query = f"""select a.id as id, a.CategoryId as CategoryId, 
-a.Keywords as Keywords, a.Message as Message, 
-a.Title as Title
-from InfoMessages as a
-inner join Catergorys as b
-on a.CategoryId = b.id
-where b.Name = '{category_name}'; """
+                   a.Keywords as Keywords, a.Message as Message, 
+                   a.Title as Title
+                   from InfoMessages as a
+                   inner join Catergorys as b
+                   on a.CategoryId = b.id
+                   where b.Name = '{category_name}'; """
 
     result = db.pool.retry_operation_sync(db.execute_query)
 
     if (len(result[0].rows) == 0):
         return []
 
-    id = result[0].rows[0].id
-    category_id = result[0].rows[0].CategoryId
-    keywords = result[0].rows[0].Keywords
-    message = result[0].rows[0].Message
-    title = result[0].rows[0].Title
+    info_messages = []
+    for row in result[0].rows:
+        id = row.id
+        category_id = row.CategoryId
+        keywords = row.Keywords
+        message = row.Message
+        title = row.Title
 
-    info_message = InfoMessage(id=id, category_id=category_id,
-                               keywords=keywords, message=message,
-                               title=title)
-    return [info_message]
-
+        info_messages.append(InfoMessage(id=id, category_id=category_id,
+                                   keywords=keywords, message=message,
+                                   title=title))
+    return info_messages
 
 def add_info_message(info_message: InfoMessage):
     try:
@@ -124,6 +125,20 @@ def add_info_message(info_message: InfoMessage):
         return True
     except Exception as exp:
         print(exp)
+        return False
+
+
+def update_info_messages(info_message: InfoMessage):
+    try:
+        db.query = f"""UPDATE InfoMessages
+                        SET Title = '{info_message.title}',
+                            CategoryId = {info_message.category_id},
+                            Message = '{info_message.message}'
+                        WHERE id = {info_message.id};"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return True
+    except Exception as error:
+        print(error)
         return False
 
 

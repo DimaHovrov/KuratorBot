@@ -5,6 +5,10 @@ from telegram.ext import (
 import general.patterns_states as p_s
 import model.Category as Category
 import model.InfoMessage as info_message
+
+import utils.info_message_utils as info_message_utils
+import utils.category_utils as category_utils
+
 choose_command_category = "/category_"
 
 
@@ -21,7 +25,7 @@ def title_enter_ccallback(update: Update, context: CallbackContext):
     title_text = update.message.text
     context.user_data['add_info_messages_title'] = title_text
 
-    category_list_message = generate_category_message_list()
+    category_list_message = category_utils.generate_category_message_list(context)
     update.message.reply_text(
         text="Выберите категорию\n" + category_list_message)
     return p_s.CATEGORY_ENTER_STATE
@@ -30,12 +34,9 @@ def title_enter_ccallback(update: Update, context: CallbackContext):
 def category_enter_ccallback(update: Update, context: CallbackContext):
     update.message.reply_text(text=str(update.message.text))
     choosed_category_command = update.message.text
-    len_command = len(choose_command_category)
+    category_id = category_utils.get_category_id_by_command(choosed_category_command)
 
-    category_index = choosed_category_command[len_command:len(
-        choosed_category_command)]
-
-    context.user_data['add_info_messages_category_id'] = int(category_index)
+    context.user_data['add_info_messages_category_id'] = int(category_id)
 
     update.message.reply_text(text="Введите содержание объявление")
     return p_s.CONTENT_ENTER_STATE
@@ -51,21 +52,13 @@ def content_enter_ccallback(update: Update, context: CallbackContext):
     info_message_model = info_message.InfoMessage(
         id=id, category_id=category_id, keywords=keywords, message=message, title=title)
 
+    info_message_text = info_message_utils.convert_model_to_message(
+        info_message_model)
     if info_message.add_info_message(info_message_model):
         update.message.reply_text("Ваше сообщение успешно создано")
+        update.message.reply_text(text=info_message_text)
     else:
         update.message.reply_text(
             "При создании сообщения произошла какая-то ошибка")
 
     return ConversationHandler.END
-
-
-def generate_category_message_list():
-    categorys = Category.get_all_categorys()
-    message = ""
-    for category in categorys:
-        id = category.id
-        name = category.name
-        message += f"""{id}. {name} \n    {choose_command_category}{id}\n"""
-
-    return message

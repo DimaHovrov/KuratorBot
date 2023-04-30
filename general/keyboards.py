@@ -18,11 +18,11 @@ keyboard_menu_messages_info_student = [
 keyboard_menu_messages_info_no_std = [
     [
         InlineKeyboardButton(
-            "Вывести весь список объявлений", callback_data=str(p_s.ALL_INFO_MESSAGES_PATTERN))
+            "Вывести список объявлений", callback_data=str(p_s.ALL_INFO_MESSAGES_PATTERN))
     ],
     [
-        InlineKeyboardButton("Выбор объявления",
-                             callback_data=str(p_s.TITLE_SEARCH_PATTERN))
+        InlineKeyboardButton("Вывести список категорий",
+                             callback_data=str(p_s.ALL_CATEGORYS_PATTERN))
     ],
     [
         InlineKeyboardButton("Поиск по заголовкам",

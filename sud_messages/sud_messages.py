@@ -8,7 +8,6 @@ import general.patterns_states as p_s
 import model.Group as Group
 import model.User as User
 import model.InfoMessage as InfoMessage
-from functools import cache
 
 prefix_group_pattern = "group "
 prefix_question_delete_pattern = "q_delete "  # question_delete

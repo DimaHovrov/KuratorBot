@@ -9,6 +9,7 @@ import sud_messages.sud_messages as sud_messages
 
 import menus.get_messages_menu as get_messages_menu
 import menus.info_messages_search as info_messages_search
+import menus.get_categorys_menu as get_categorys_menu
 
 import general.patterns_states as p_s
 import general.keyboards as keyboards
@@ -56,6 +57,7 @@ def reg_handlers(dispatcher):
     reg_conversations(dispatcher)
     reg_message_handlers(dispatcher)
 
+
 def reg_commands(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler(
@@ -79,16 +81,22 @@ def reg_callback_querys(dispatcher):
         sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
         get_messages_menu.get_all_messages_ccallback, pattern="^" + str(p_s.ALL_INFO_MESSAGES_PATTERN) + "$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        get_categorys_menu.get_all_categorys_icallback, pattern="^" + str(p_s.ALL_CATEGORYS_PATTERN) + "$"))
 
 
 def reg_conversations(dispatcher):
     dispatcher.add_handler(conversations.conv_handler_title_search)
     dispatcher.add_handler(conversations.conv_handler_category_search)
     dispatcher.add_handler(conversations.conv_handler_add_info_messages)
-    dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))
     dispatcher.add_handler(conversations.conv_handler_add_category)
+    dispatcher.add_handler(conversations.conv_handler_update_info_messages)
+    dispatcher.add_handler(MessageHandler(Filters.contact, contact_user))
 
 
 def reg_message_handlers(dispatcher):
+    # Когда юзер находится вне всех конверсейшнов
     dispatcher.add_handler(MessageHandler(Filters.regex(
         "^/message_[0-9]+$"), info_messages_search.choose_message_ccallback))
+    dispatcher.add_handler(MessageHandler(Filters.regex(
+        "^/category_[0-9]+$"), get_categorys_menu.get_messages_by_category))

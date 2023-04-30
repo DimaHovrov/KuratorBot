@@ -7,6 +7,7 @@ import model.Category as Category
 import model.InfoMessage as info_message
 import model.Category as Category
 
+
 def add_categorys_icallback(update: Update, context: CallbackContext):
     """Пользователь нажимает Создать категорию"""
     query = update.callback_query
@@ -19,7 +20,7 @@ def category_name_ccallback(update: Update, context: CallbackContext):
     "Пользователь вводит название категории"
     category_name = update.message.text
     result = Category.add_new_category(category_name)
-    
+
     if result:
         update.message.reply_text("Категория успешно создана")
     else:

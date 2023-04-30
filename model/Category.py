@@ -35,6 +35,19 @@ def add_new_category(category_name):
         return False
 
 
+def get_category_by_id(category_id):
+    try:
+        db.query = f"""select * 
+                       from Catergorys
+                       where id = {category_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        category = Category(id = result[0].rows[0].id, name = result[0].rows[0].Name)
+        return category
+    except Exception as error:
+        print(error)
+        return False
+
+
 def get_max_id():
     db.query = f"""select max(id) as id from Catergorys"""
     result = db.pool.retry_operation_sync(db.execute_query)

@@ -15,13 +15,14 @@ def convert_model_to_message(info_message: InfoMessage):
 
 def convert_model_to_message_short(info_message: InfoMessage):
     info_text_message = 'Заголовок: ' + info_message.title + '\n'
-    info_text_message += 'Содержание:\n' + info_message.message[:MAX_DESC_LEN] + (
-        info_message.message[:MAX_DESC_LEN] and '...')
+    info_text_message += 'Содержание:\n' + \
+        convert_message_to_short(info_message.message)
 
     return info_text_message
 
 
 def convert_models_to_message_short(info_messages):
+    # Не сохраняет id выведенных сообщений в user_data 
     info_text_message = ''
     i = 1
     for info_message in info_messages:
@@ -34,6 +35,7 @@ def convert_models_to_message_short(info_messages):
 
 
 def convert_models_to_message_short(info_messages, context: CallbackContext, data_name='candidates_id'):
+    # Сохраняет id выведенных сообщений в user_data
     info_text_message = ''
     i = 1
     context.user_data[data_name] = []
@@ -46,3 +48,11 @@ def convert_models_to_message_short(info_messages, context: CallbackContext, dat
         i += 1
 
     return info_text_message
+
+
+def convert_message_to_short(message):
+    if len(message) > MAX_DESC_LEN:
+        return message[:MAX_DESC_LEN] + (
+            message[:MAX_DESC_LEN] and '...')
+    else:
+        return message
