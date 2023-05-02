@@ -85,7 +85,7 @@ def choose_message_ccallback(update: Update, context: CallbackContext):
 
     if choosed_message_object == None:
         update.message.reply_text(
-            'Сообщение не найдено. Выберите сообщение заново')
+            '*Сообщение не найдено. Выберите сообщение заново*')
         return p_s.CHOOSE_MESSAGE_STATE
 
     info_text_message = info_message_utils.convert_model_to_message(
@@ -114,6 +114,7 @@ def category_search_ccallback(update: Update, context: CallbackContext):
         category_text)
 
     count_message = len(info_messages)
+    print(count_message)
     if count_message == 0:
         update.message.reply_text("Объявление с такой категорией не найден")
         return p_s.CATEGORY_SEARCH_STATE
@@ -123,7 +124,7 @@ def category_search_ccallback(update: Update, context: CallbackContext):
     for i in range(count_message):
         if info_messages[i] == None:
             continue
-        new_message = str(
+        new_message += str(
             i+1) + '. ' + info_message_utils.convert_model_to_message_short(info_messages[i]) + '\n'
         new_message += choose_command_info_message + str(i+1) + '\n'
 

@@ -25,16 +25,17 @@ def title_enter_ccallback(update: Update, context: CallbackContext):
     title_text = update.message.text
     context.user_data['add_info_messages_title'] = title_text
 
-    category_list_message = category_utils.generate_category_message_list(context)
+    category_list_message = category_utils.generate_category_message_list(
+        context)
     update.message.reply_text(
         text="Выберите категорию\n" + category_list_message)
     return p_s.CATEGORY_ENTER_STATE
 
 
 def category_enter_ccallback(update: Update, context: CallbackContext):
-    update.message.reply_text(text=str(update.message.text))
     choosed_category_command = update.message.text
-    category_id = category_utils.get_category_id_by_command(choosed_category_command)
+    category_id = category_utils.get_category_id_by_command(
+        choosed_category_command, context)
 
     context.user_data['add_info_messages_category_id'] = int(category_id)
 

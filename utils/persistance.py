@@ -5,6 +5,16 @@ from telegram.ext.utils.types import ConversationDict, CDCData, UD
 from db import query_db as db
 import json
 
+def check_conversation_key(json_key):
+    db.query = f"""select * from Conversations
+                   where CAST(Key as Utf8) =='{json_key}'"""
+
+    result = db.pool.retry_operation_sync(db.execute_query)
+
+    if len(result[0].rows) == 0:
+        return False
+
+    return True
 
 class YdbPersistance(BasePersistence):
     def __init__(self) -> None:
@@ -59,7 +69,13 @@ class YdbPersistance(BasePersistence):
         if new_state:
             max_id = db.get_max_id_Conversations() + 1
             json_key = json.dumps(key)
-            db.query = f"""insert into Conversations (Id, Key, Name, State)  
+
+            exist_key = check_conversation_key(json_key)
+
+            db.query = f"""update Conversations
+                           Set State = {new_state},
+                           Name = '{name}'
+                           where JSON_VALUE(Key,'$[0]') = "{key[0]}" AND JSON_VALUE(Key,"$[1]") = '{key[1]}'""" if exist_key else f"""insert into Conversations (Id, Key, Name, State)  
                            values({max_id}, '{json_key}', '{name}', {new_state})"""
         else:
             json_key = json.dumps(key)

@@ -1,5 +1,10 @@
 {
-    "title":"чат-бот",
-    "candidates_id":[2, 4, 6],
-    "choosed_info_message_id": 2
+    "category": "Важное", 
+    "candidates_id": [2, 3, 5, 6, 7, 8, 9], 
+    "choosed_info_message_id": 8, 
+    "selected_group": [4, 3, 1, 5, 2], 
+    "title": "Привет", 
+    "add_info_messages_title": "dsafdsfdsf", 
+    "add_info_messages_category_id": 3, 
+    "category_candidates_id": [1, 2, 4, 5, 6]
 }

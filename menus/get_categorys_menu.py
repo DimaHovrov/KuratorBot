@@ -26,9 +26,6 @@ def get_messages_by_category(update: Update, context: CallbackContext):
     category = Category.get_category_by_id(category_id)
     info_messages = InfoMessages.get_info_messages_by_category(category.name)
 
-    print(category.name)
-    print(len(info_messages))
-
     message = info_message_utils.convert_models_to_message_short(
         info_messages, context)
     if len(message) == 0:

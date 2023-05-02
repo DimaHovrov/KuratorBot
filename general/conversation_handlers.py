@@ -64,7 +64,7 @@ conv_handler_add_category = ConversationHandler(
         p_s.ADD_CATEGORY_ENTER_STATE: [MessageHandler(
             Filters.text, info_messages_add_categorys.category_name_ccallback)]
     },
-    fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
+    fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='ADD_CATEGORYS_CONVERSATION',
     persistent=True
 )
@@ -79,11 +79,11 @@ conv_handler_update_info_messages = ConversationHandler(
         p_s.UPDATE_TITLE_STATE: [MessageHandler(Filters.text, update_info_messages.update_title_ccallback), CallbackQueryHandler(update_info_messages.skip_title, pattern="^" +
                                                                                                                                  str(p_s.SKIP_PATTERN) + "$")],
         p_s.UPDATE_CATEGORY_STATE: [MessageHandler(Filters.regex("^/category_[0-9]+$"), update_info_messages.update_category_callback), CallbackQueryHandler(update_info_messages.skip_category, pattern="^" +
-                                                                                                                                                            str(p_s.SKIP_PATTERN) + "$") ],
+                                                                                                                                                             str(p_s.SKIP_PATTERN) + "$")],
         p_s.UPDATE_CONTENT_STATE: [MessageHandler(Filters.text, update_info_messages.update_content_callback), CallbackQueryHandler(update_info_messages.skip_content, pattern="^" +
                                                                                                                                     str(p_s.SKIP_PATTERN) + "$")],
     },
-    fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
+    fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='UPDATE_INFO_MESSAGES_CONVERSATION',
     persistent=True
 )

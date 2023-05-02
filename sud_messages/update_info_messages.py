@@ -39,7 +39,9 @@ def update_title_ccallback(update: Update, context: CallbackContext):
     info_message_model = InfoMessage.get_info_message_by_id(info_message_id)
     info_message_model.title = new_title
 
-    InfoMessage.update_info_messages(info_message_model)
+    if InfoMessage.update_info_messages(info_message_model) == False:
+        update.message.reply_text(text='Произошла какая-то ошибка')
+        return p_s.UPDATE_TITLE_STATE
 
     category = Category.get_category_by_id(info_message_model.category_id)
     message = f"""Старая категория: {category.name}\n\n"""
@@ -62,7 +64,9 @@ def update_category_callback(update: Update, context: CallbackContext):
     info_message_model = InfoMessage.get_info_message_by_id(info_message_id)
 
     info_message_model.category_id = category_id
-    InfoMessage.update_info_messages(info_message_model)
+    if InfoMessage.update_info_messages(info_message_model) == False:
+        update.message.reply_text(text='Произошла какая-то ошибка')
+        return p_s.UPDATE_CATEGORY_STATE
 
     message = f"""Старое содержание: {info_message_utils
             .convert_message_to_short(info_message_model.message)}\n\n"""
@@ -80,7 +84,9 @@ def update_content_callback(update: Update, context: CallbackContext):
 
     info_message_model.message = new_content
 
-    InfoMessage.update_info_messages(info_message_model)
+    if InfoMessage.update_info_messages(info_message_model) == False:
+        update.message.reply_text(text='Произошла какая-то ошибка')
+        return p_s.UPDATE_CONTENT_STATE
 
     update.message.reply_text(text="Ваше сообщение успешно изменено")
 
@@ -107,12 +113,11 @@ def skip_title(update: Update, context: CallbackContext):
     message += "Выберите новую категорию: "
     query.message.reply_text(text=message)
     query.message.reply_text(text=category_utils.generate_category_message_list(context
-    ), reply_markup=skip_reply_markup)
+                                                                                ), reply_markup=skip_reply_markup)
     return p_s.UPDATE_CATEGORY_STATE
 
 
 def skip_category(update: Update, context: CallbackContext):
-    print('skip_category')
     query = update.callback_query
     query.answer()
 

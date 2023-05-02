@@ -22,7 +22,7 @@ def convert_model_to_message_short(info_message: InfoMessage):
 
 
 def convert_models_to_message_short(info_messages):
-    # Не сохраняет id выведенных сообщений в user_data 
+    # Не сохраняет id выведенных сообщений в user_data
     info_text_message = ''
     i = 1
     for info_message in info_messages:

@@ -116,7 +116,6 @@ def add_info_message(info_message: InfoMessage):
         message = info_message.message
         title = info_message.title
 
-        print(id, author_id, category_id, message, title)
         db.query = f"""insert into InfoMessages(id, AuthorId, 
                        CategoryId, Keywords, Message, Title) 
                     values ({id},{author_id}, {category_id}, '{keywords}',

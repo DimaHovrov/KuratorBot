@@ -47,7 +47,6 @@ def menu_messages_info(update: Update, context: CallbackContext) -> None:
 
 
 def contact_user(update: Update, context: CallbackContext) -> None:
-    print(update.message.contact.phone_number)
     user_module.register_user_on_bot(update)
 
 
