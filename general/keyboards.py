@@ -1,4 +1,4 @@
-from telegram import InlineKeyboardButton
+from telegram import InlineKeyboardButton, WebAppInfo
 import general.patterns_states as p_s
 
 keyboard_menu_messages_info_student = [
@@ -37,3 +37,8 @@ keyboard_menu_messages_info_no_std = [
                              callback_data=str(p_s.ADD_MESSAGE_CATEGORY_PATTERN))
     ]
 ]
+
+keyboard_vote_web_app = [[
+        InlineKeyboardButton(
+            "Создать опрос", web_app=WebAppInfo("https://kurator-bot.website.yandexcloud.net"))
+    ]]

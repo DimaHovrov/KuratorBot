@@ -19,8 +19,9 @@ import general.conversation_handlers as conversations
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
         [[KeyboardButton('Share contact', request_contact=True)]], resize_keyboard=True)
-    update.message.reply_text('Привет!', reply_markup=reply_markup)
-
+    #update.message.reply_text('Привет! Если вы используете бот впервые отправьте номер', reply_markup=reply_markup)
+    reply_markup = InlineKeyboardMarkup(keyboards.keyboard_vote_web_app)
+    update.message.reply_text('Привет', reply_markup=reply_markup)
 
 def menu_messages_info(update: Update, context: CallbackContext) -> None:
     title_menu_messages_info = 'Меню объявлений'
@@ -72,10 +73,6 @@ def reg_callback_querys(dispatcher):
         sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
-    dispatcher.add_handler(CallbackQueryHandler(
-        sud_messages.delete_info_messages_icallback, pattern="^" + str(p_s.DELETE_MESSAGE_PATTERN) + "$"))
-    dispatcher.add_handler(CallbackQueryHandler(
-        sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(

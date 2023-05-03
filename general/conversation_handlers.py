@@ -9,17 +9,19 @@ import menus.info_messages_add_categorys as info_messages_add_categorys
 import general.patterns_states as p_s
 
 import sud_messages.update_info_messages as update_info_messages
+
 # конверсейшн поиска сообщения по заголовку
 conv_handler_title_search = ConversationHandler(
     entry_points=[CallbackQueryHandler(
         info_messages_search
         .title_search_icallback, pattern="^" + str(p_s.TITLE_SEARCH_PATTERN) + "$")],
     states={
-        p_s.TITLE_SEARCH_STATE: [MessageHandler(Filters.text, info_messages_search.title_search_ccallback)],
+        p_s.TITLE_SEARCH_STATE: [MessageHandler(Filters.text & ~Filters.command, info_messages_search.title_search_ccallback)],
         p_s.CHOOSE_MESSAGE_STATE: [MessageHandler(Filters.regex("^/message_[0-9]+$"), info_messages_search.choose_message_ccallback)],
     },
     fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
     name='TITLE_SEARCH_CONVERSATION',
+    allow_reentry=True,
     persistent=True
 )
 
@@ -29,7 +31,7 @@ conv_handler_category_search = ConversationHandler(
         info_messages_search
         .category_search_icallback, pattern="^" + str(p_s.CATEGORY_SEARCH_PATTERN) + "$")],
     states={
-        p_s.CATEGORY_SEARCH_STATE: [MessageHandler(Filters.text, info_messages_search.category_search_ccallback)],
+        p_s.CATEGORY_SEARCH_STATE: [MessageHandler(Filters.text & ~Filters.command, info_messages_search.category_search_ccallback)],
         p_s.CHOOSE_MESSAGE_STATE: [MessageHandler(Filters.regex("^/message_[0-9]+$"), info_messages_search.choose_message_ccallback)],
     },
     fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
@@ -44,9 +46,9 @@ conv_handler_add_info_messages = ConversationHandler(
         str(p_s.ADD_INFO_MESSAGE_PATTERN) + "$"
     )],
     states={
-        p_s.TITLE_ENTER_STATE: [MessageHandler(Filters.text, info_messages_add.title_enter_ccallback)],
+        p_s.TITLE_ENTER_STATE: [MessageHandler(Filters.text & ~Filters.command, info_messages_add.title_enter_ccallback)],
         p_s.CATEGORY_ENTER_STATE: [MessageHandler(Filters.regex("^/category_[0-9]+$"), info_messages_add.category_enter_ccallback)],
-        p_s.CONTENT_ENTER_STATE: [MessageHandler(Filters.text, info_messages_add.content_enter_ccallback)],
+        p_s.CONTENT_ENTER_STATE: [MessageHandler(Filters.text & ~Filters.command, info_messages_add.content_enter_ccallback)],
     },
     fallbacks=[CommandHandler("cancel", info_messages_menu.cancel)],
     name='ADD_INFO_MESSAGES_CONVERSATION',
@@ -62,7 +64,7 @@ conv_handler_add_category = ConversationHandler(
     )],
     states={
         p_s.ADD_CATEGORY_ENTER_STATE: [MessageHandler(
-            Filters.text, info_messages_add_categorys.category_name_ccallback)]
+            Filters.text & ~Filters.command, info_messages_add_categorys.category_name_ccallback)]
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='ADD_CATEGORYS_CONVERSATION',
@@ -76,11 +78,11 @@ conv_handler_update_info_messages = ConversationHandler(
         str(p_s.UPDATE_MESSAGE_PATTERN) + "$"
     )],
     states={
-        p_s.UPDATE_TITLE_STATE: [MessageHandler(Filters.text, update_info_messages.update_title_ccallback), CallbackQueryHandler(update_info_messages.skip_title, pattern="^" +
+        p_s.UPDATE_TITLE_STATE: [MessageHandler(Filters.text & ~Filters.command, update_info_messages.update_title_ccallback), CallbackQueryHandler(update_info_messages.skip_title, pattern="^" +
                                                                                                                                  str(p_s.SKIP_PATTERN) + "$")],
         p_s.UPDATE_CATEGORY_STATE: [MessageHandler(Filters.regex("^/category_[0-9]+$"), update_info_messages.update_category_callback), CallbackQueryHandler(update_info_messages.skip_category, pattern="^" +
                                                                                                                                                              str(p_s.SKIP_PATTERN) + "$")],
-        p_s.UPDATE_CONTENT_STATE: [MessageHandler(Filters.text, update_info_messages.update_content_callback), CallbackQueryHandler(update_info_messages.skip_content, pattern="^" +
+        p_s.UPDATE_CONTENT_STATE: [MessageHandler(Filters.text & ~Filters.command, update_info_messages.update_content_callback), CallbackQueryHandler(update_info_messages.skip_content, pattern="^" +
                                                                                                                                     str(p_s.SKIP_PATTERN) + "$")],
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],

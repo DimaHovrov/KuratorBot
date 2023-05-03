@@ -114,7 +114,7 @@ def category_search_ccallback(update: Update, context: CallbackContext):
         category_text)
 
     count_message = len(info_messages)
-    print(count_message)
+
     if count_message == 0:
         update.message.reply_text("Объявление с такой категорией не найден")
         return p_s.CATEGORY_SEARCH_STATE

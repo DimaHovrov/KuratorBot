@@ -30,4 +30,5 @@ def get_messages_by_category(update: Update, context: CallbackContext):
         info_messages, context)
     if len(message) == 0:
         update.message.reply_text('Сообщения с такими категориями не найдены')
+        return
     update.message.reply_text(message)

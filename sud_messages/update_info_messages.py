@@ -27,7 +27,6 @@ def select_update_icallback(update: Update, context: CallbackContext):
     message = f"""Старый заголовок: {info_message_model.title}\n\n"""
     message += "Введите новый заголовок: "
 
-    reply_markup = InlineKeyboardMarkup(keyboard_skip)
     query.message.reply_text(text=message, reply_markup=skip_reply_markup)
     return p_s.UPDATE_TITLE_STATE
 
