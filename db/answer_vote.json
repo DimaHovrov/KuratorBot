@@ -1,0 +1,14 @@
+{
+    "user_id":"1",
+    "vote_id":"3",
+    "answers":[
+        {
+            "question_id": 1,
+            "answer":[1,2, "Medium"]
+        },
+        {
+            "question_id": 2,
+            "answer":["Transgender"]
+        }
+    ]
+}

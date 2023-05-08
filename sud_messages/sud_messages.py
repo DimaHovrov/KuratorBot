@@ -5,7 +5,7 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, Re
 
 import re
 import general.patterns_states as p_s
-import model.Group as Group
+import model.Groups as Group
 import model.User as User
 import model.InfoMessage as InfoMessage
 

@@ -1,0 +1,43 @@
+{
+    "vote_id" : "1",
+    "questions":[
+        {
+            "question_id": 1,
+            "question_text":"How are you?",
+            "type":"few",
+            "options":[
+                {
+                    "option_text": "Good",
+                    "type": "edition"
+                },
+                {
+                    "option_text": "Bad",
+                    "type": "edition"
+                },
+                {
+                    "option_text": "Other",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "question_id": 2,
+            "question_text":"Your gender?",
+            "type":"one",
+            "options":[
+                {
+                    "option_text": "Men",
+                    "type": "edition"
+                },
+                {
+                    "option_text": "Women",
+                    "type": "edition"
+                },
+                {
+                    "option_text": "Other",
+                    "type": "text"
+                }
+            ]
+        }
+    ]
+}
