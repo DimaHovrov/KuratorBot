@@ -10,6 +10,8 @@ import general.patterns_states as p_s
 
 import sud_messages.update_info_messages as update_info_messages
 
+import create_temporal_link.choose_uchp as choose_uchp
+
 # конверсейшн поиска сообщения по заголовку
 conv_handler_title_search = ConversationHandler(
     entry_points=[CallbackQueryHandler(
@@ -87,5 +89,17 @@ conv_handler_update_info_messages = ConversationHandler(
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='UPDATE_INFO_MESSAGES_CONVERSATION',
+    persistent=True
+)
+
+# конверсейшн создания временной ссылки
+conv_handler_create_temporal_link = ConversationHandler(
+    entry_points=[CallbackQueryHandler(
+        choose_uchp.choose_uchp_buttons_ccalback, pattern="^uchp [0-9]+$"
+    )],
+    states={
+    },
+    fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
+    name='CREATE_TEMPORAL_LINK_CONVERSATION',
     persistent=True
 )

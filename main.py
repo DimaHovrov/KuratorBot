@@ -21,6 +21,7 @@ from utils.persistance import YdbPersistance
 commands = [
     BotCommand("start", "Главное меню"),
     BotCommand("menu_messages_info", "Меню объявлений"),
+    BotCommand("create_temporal_link", "Создать временную ссылку регистрации")
 ]
 
 

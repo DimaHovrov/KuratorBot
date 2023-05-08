@@ -5,7 +5,7 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, Re
 
 import re
 import general.patterns_states as p_s
-import model.Groups as Group
+import model.Groups as Groups
 import model.User as User
 import model.InfoMessage as InfoMessage
 
@@ -206,6 +206,6 @@ def remove_group(id, row, col, user_data):
     user_data['selected_group'].remove(id)
 
 
-groups = Group.get_all_groups()
+groups = Groups.get_all_groups()
 default_groups_keyboard = generate_inline_buttons_group(groups)
 groups_keyboard = generate_inline_buttons_group(groups)
