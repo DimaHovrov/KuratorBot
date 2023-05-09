@@ -11,6 +11,7 @@ import general.patterns_states as p_s
 import sud_messages.update_info_messages as update_info_messages
 
 import create_temporal_link.choose_uchp as choose_uchp
+import create_temporal_link.create_temporal_link_command as create_temporal_link_command
 
 # конверсейшн поиска сообщения по заголовку
 conv_handler_title_search = ConversationHandler(
@@ -81,11 +82,11 @@ conv_handler_update_info_messages = ConversationHandler(
     )],
     states={
         p_s.UPDATE_TITLE_STATE: [MessageHandler(Filters.text & ~Filters.command, update_info_messages.update_title_ccallback), CallbackQueryHandler(update_info_messages.skip_title, pattern="^" +
-                                                                                                                                 str(p_s.SKIP_PATTERN) + "$")],
+                                                                                                                                                    str(p_s.SKIP_PATTERN) + "$")],
         p_s.UPDATE_CATEGORY_STATE: [MessageHandler(Filters.regex("^/category_[0-9]+$"), update_info_messages.update_category_callback), CallbackQueryHandler(update_info_messages.skip_category, pattern="^" +
                                                                                                                                                              str(p_s.SKIP_PATTERN) + "$")],
         p_s.UPDATE_CONTENT_STATE: [MessageHandler(Filters.text & ~Filters.command, update_info_messages.update_content_callback), CallbackQueryHandler(update_info_messages.skip_content, pattern="^" +
-                                                                                                                                    str(p_s.SKIP_PATTERN) + "$")],
+                                                                                                                                                       str(p_s.SKIP_PATTERN) + "$")],
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='UPDATE_INFO_MESSAGES_CONVERSATION',
@@ -94,10 +95,12 @@ conv_handler_update_info_messages = ConversationHandler(
 
 # конверсейшн создания временной ссылки
 conv_handler_create_temporal_link = ConversationHandler(
-    entry_points=[CallbackQueryHandler(
-        choose_uchp.choose_uchp_buttons_ccalback, pattern="^uchp [0-9]+$"
-    )],
+    entry_points=[CommandHandler(
+        "create_temporal_link", create_temporal_link_command.create_temporal_link)],
     states={
+        p_s.CHOOSE_UCHP_LINK_STATE: [CallbackQueryHandler(
+            choose_uchp.choose_uchp_buttons_ccalback, pattern="^uchp [0-9]+$"
+        )]
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='CREATE_TEMPORAL_LINK_CONVERSATION',
