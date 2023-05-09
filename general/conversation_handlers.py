@@ -10,8 +10,8 @@ import general.patterns_states as p_s
 
 import sud_messages.update_info_messages as update_info_messages
 
-import create_temporal_link.choose_uchp as choose_uchp
-import create_temporal_link.create_temporal_link_command as create_temporal_link_command
+from create_temporal_link import (
+    choose_uchp, create_temporal_link_command, choose_course, choose_group)
 
 # конверсейшн поиска сообщения по заголовку
 conv_handler_title_search = ConversationHandler(
@@ -100,7 +100,13 @@ conv_handler_create_temporal_link = ConversationHandler(
     states={
         p_s.CHOOSE_UCHP_LINK_STATE: [CallbackQueryHandler(
             choose_uchp.choose_uchp_buttons_ccalback, pattern="^uchp [0-9]+$"
-        )]
+        )],
+        p_s.CHOOSE_COURSE_LINK_STATE: [CallbackQueryHandler(
+            choose_course.choose_course_buttons_ccalback, pattern="^course [0-9]+$"
+        )],
+        p_s.CHOOSE_GROUP_LINK_STATE: [CallbackQueryHandler(
+            choose_group.choose_group_buttons_ccalback, pattern="^study_group [0-9]+$"
+        )],
     },
     fallbacks=[CommandHandler('cancel', info_messages_menu.cancel)],
     name='CREATE_TEMPORAL_LINK_CONVERSATION',

@@ -63,3 +63,25 @@ def get_study_group_with_name_by_id(id):
         return study_group_with_name
     except Exception as exp:
         return False
+    
+
+def get_study_groups_by_ids(uchp_id, course_id):
+    try:
+        db.query = f"""select StudyGroup.Id as StudyGroupId,
+                       Course.Number as CourseNumber,
+                       Group.Name as GroupName, Uchp.Id as UchpId, Type.Name as TypeName,Course.Id as CourseId
+                       from StudyGroup
+                       inner join Course
+                       on Course.Id=StudyGroup.CourseId
+                       inner join Group
+                       on StudyGroup.GroupId = Group.Id
+                       inner join Uchp
+                       on StudyGroup.UchpId = Uchp.Id
+                       inner join Type
+                       on Course.TypeId = Type.Id
+                       where CourseId = {course_id} and UchpId = {uchp_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return result[0].rows
+    except Exception as exp:
+        print(exp)
+        return False

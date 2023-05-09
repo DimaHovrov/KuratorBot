@@ -43,25 +43,3 @@ keyboard_vote_web_app = [[
     InlineKeyboardButton(
         "Создать опрос", web_app=WebAppInfo("https://kurator-bot.website.yandexcloud.net"))
 ]]
-
-max_count_buttons_in_line = 4
-prefix_uchp_pattern = "uchp "
-
-
-def generate_uchp_inline_buttons(uchps):
-    uchps_keyboard = []
-    uchps_keyboard.append([])
-
-    row_index = 0
-    iteration_index = 0
-    for uchp in uchps:
-        iteration_index += 1
-        name = uchp.name
-        if iteration_index % (max_count_buttons_in_line+1) == 0:
-            row_index += 1
-            uchps_keyboard.append([])
-        pattern = prefix_uchp_pattern + str(uchp.id)
-        uchps_keyboard[row_index].append(InlineKeyboardButton(
-            name, callback_data=pattern))
-
-    return uchps_keyboard
