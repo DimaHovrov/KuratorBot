@@ -17,6 +17,7 @@ import general.conversation_handlers as conversations
 
 import create_temporal_link.create_temporal_link_command as create_temporal_link_command
 
+import web_app.web_app as web_app
 
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
@@ -100,3 +101,4 @@ def reg_message_handlers(dispatcher):
         "^/message_[0-9]+$"), info_messages_search.choose_message_ccallback))
     dispatcher.add_handler(MessageHandler(Filters.regex(
         "^/category_[0-9]+$"), get_categorys_menu.get_messages_by_category))
+    dispatcher.add_handler(MessageHandler(Filters.web_app_data, web_app.web_app_data))

@@ -18,6 +18,7 @@ import model.User as User
 
 from utils.persistance import YdbPersistance
 
+
 commands = [
     BotCommand("start", "Главное меню"),
     BotCommand("menu_messages_info", "Меню объявлений"),

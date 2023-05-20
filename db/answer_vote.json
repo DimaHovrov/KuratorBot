@@ -4,7 +4,7 @@
     "answers":[
         {
             "question_id": 1,
-            "answer":[1,2, "Medium"]
+            "answer":[1, 2, "Medium"]
         },
         {
             "question_id": 2,

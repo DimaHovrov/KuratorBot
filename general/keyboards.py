@@ -41,5 +41,5 @@ keyboard_menu_messages_info_no_std = [
 
 keyboard_vote_web_app = [[
     InlineKeyboardButton(
-        "Создать опрос", web_app=WebAppInfo("https://kurator-bot.website.yandexcloud.net"))
+        "Создать опрос", web_app=WebAppInfo("http://localhost:3000/"))
 ]]
