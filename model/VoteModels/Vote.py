@@ -6,16 +6,12 @@ class Vote:
     description:str
     author_id:int
     data:str
-    groups_id:str
-    users_id:str
 
     def __init__(self, **kwargs) -> None:
         self.id = kwargs['id']
         self.description = kwargs['description']
         self.author_id = kwargs['author_id']
         self.data = kwargs['data']
-        self.groups_id = kwargs['groups_id']
-        self.users_id = kwargs['users_id']
 
 
 
@@ -32,7 +28,17 @@ def add_vote(vote: Vote):
         print(exp)
         return False
 
-
+def get_vote_by_id(id):
+    try:
+        db.query = f"""select * from Vote
+                       where id = {id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        row = result[0].rows[0]
+        vote = Vote(id = id, description=row.Description, author_id = row.AuthorId, data = row.Data)
+        return vote
+    except Exception as exp:
+        print(exp)
+        return False
 
 def get_max_id():
     db.query = f"""select max(id) as id from Vote"""

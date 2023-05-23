@@ -20,7 +20,8 @@ commands = [
     BotCommand("start", "Главное меню"),
     BotCommand("menu_messages_info", "Меню объявлений"),
     BotCommand("create_temporal_link", "Создать временную ссылку регистрации"),
-    BotCommand("open_vote_page", "Открыть страницу опросов")
+    BotCommand("open_vote_page", "Открыть страницу опросов"),
+    BotCommand("cancel", "Отменить действие")
 ]
 
 

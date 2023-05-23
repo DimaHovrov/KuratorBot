@@ -1,4 +1,4 @@
-from telegram import (Update, InlineKeyboardMarkup)
+from telegram import (Update, InlineKeyboardMarkup, KeyboardButton, WebAppInfo, ReplyKeyboardMarkup)
 from telegram.ext import CallbackContext
 import sud_messages.sud_messages as sud_messages
 #import model.Groups as Groups
@@ -7,6 +7,10 @@ import model.GroupsModels.StudyGroup as StudyGroup
 
 import model.User as User
 import model.VoteModels.VoteGroups as VoteGroups
+import model.VoteModels.VoteAnswer as VoteAnswer
+import model.VoteModels.Vote as Vote
+
+import general.keyboards as keyboards
 import re
 
 prefix_choose_vote_command = '/vote_'
@@ -16,7 +20,7 @@ user_data_groups = 'selected_vote_groups'#название свойства гд
 
 def vote_choose(update: Update, context: CallbackContext):
     #когда юзер выбирает опрос по команде /vote_
-    result = re.findall("[0-9]+", update.data)
+    result = re.findall("[0-9]+", update.message.text)
     vote_id = int(result[0])
     telegram_id = update.message.from_user.id
 
@@ -29,10 +33,29 @@ def vote_choose(update: Update, context: CallbackContext):
     user_access = User.get_user_access(user)
     reply_markup = ''
 
+    vote = Vote.get_vote_by_id(vote_id)
+
     if (user_access == User.ADMIN or user_access == User.TUTOR):
-        update.message.reply_text("Открыть страницу опросов",reply_markup=reply_markup)
-    else:
-        update.message.reply_text('У вас нет доступа к данной команде')
+        message = f"""Описание: {vote.description}"""
+        reply_markup = InlineKeyboardMarkup(keyboards.keyboard_send_vote)
+        update.message.reply_text(text=message, reply_markup=reply_markup)
+        return
+    
+    #проверка на доступ к опросу
+    check_access_to_vote = VoteGroups.check_group_to_vote(user.groups_id, vote.id)
+    if check_access_to_vote == False:
+        update.message.reply_text('У вас нет доступа к данному опросу')
+        return
+    
+    #проверка дан ли ответ к опросу данным юзером
+    check_answered = VoteAnswer.check_answer_to_vote(user.id, vote.id)
+    if check_answered:
+        update.message.reply_text('Вы уже ответили на данный опрос')
+        return
+    
+    web_app_button = [[KeyboardButton(text="Ответить на опрос", web_app=WebAppInfo("https://kurator-bot.website.yandexcloud.net?voteId={vote.id}"))]]
+    reply_markup = ReplyKeyboardMarkup(web_app_button)
+    update.message.reply_text('Чтобы отвеить на данный опрос пожалуйста нажмите на кнопку "Ответить на опрос"', reply_markup=reply_markup)
 
 
 def send_vote_icallback(update: Update, context: CallbackContext):

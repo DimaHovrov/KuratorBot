@@ -5,6 +5,7 @@ import general.keyboards as keyboards
 
 
 def web_app_data(update: Update, context: ContextTypes):
+    """Срабатывает когда юзер создает опрос"""
     web_app_data = update.message.web_app_data
     telegram_id = update.message.from_user.id
     vote = create_new_vote.create_new_vote(telegram_id, web_app_data)

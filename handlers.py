@@ -21,6 +21,8 @@ import web_app.web_app as web_app
 
 import vote.vote_send as vote_send
 
+import menus.info_messages_menu as info_messages_menu
+
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
         [[KeyboardButton('Share contact', request_contact=True)]], resize_keyboard=True)
@@ -63,7 +65,7 @@ def open_vote_page(update: Update, context: CallbackContext):
 
     user_access = user_module.get_user_access(user)
     reply_markup = ''
-
+    
     if (user_access == user_module.ADMIN or user_access == user_module.TUTOR):
         reply_markup = ReplyKeyboardMarkup(keyboards.keyboard_vote_web_app, resize_keyboard=True)
         update.message.reply_text("Открыть страницу опросов",reply_markup=reply_markup)
@@ -90,6 +92,8 @@ def reg_commands(dispatcher):
         "menu_messages_info", menu_messages_info))
     dispatcher.add_handler(CommandHandler(
         "open_vote_page", open_vote_page))
+    dispatcher.add_handler(CommandHandler(
+        "cancel", info_messages_menu.cancel))
 
 
 def reg_callback_querys(dispatcher):

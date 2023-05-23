@@ -102,11 +102,11 @@ def set_telegram_id_by_id(id, telegram_id):
 def get_user_access(user: User):
     if user == None:
         return NO_REG
-    if user.is_admin == True:
+    if bool(user.is_admin) == True:
         return ADMIN
-    if user.is_tutor == True:
+    if bool(user.is_tutor) == True:
         return TUTOR
-    if (user.is_student == True):
+    if (bool(user.is_student) == True):
         return STUDENT
 
 
