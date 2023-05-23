@@ -2,10 +2,7 @@ from telegram import Update
 from telegram.ext import (
     Updater,
     Dispatcher,
-    CommandHandler,
-    MessageHandler,
-    CallbackContext,
-    Filters,
+    CallbackContext
 )
 from telegram import Bot, Update, BotCommand
 import json
@@ -22,7 +19,8 @@ from utils.persistance import YdbPersistance
 commands = [
     BotCommand("start", "Главное меню"),
     BotCommand("menu_messages_info", "Меню объявлений"),
-    BotCommand("create_temporal_link", "Создать временную ссылку регистрации")
+    BotCommand("create_temporal_link", "Создать временную ссылку регистрации"),
+    BotCommand("open_vote_page", "Открыть страницу опросов")
 ]
 
 

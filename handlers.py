@@ -22,9 +22,9 @@ import web_app.web_app as web_app
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
         [[KeyboardButton('Share contact', request_contact=True)]], resize_keyboard=True)
-    # update.message.reply_text('Привет! Если вы используете бот впервые отправьте номер', reply_markup=reply_markup)
-    reply_markup = InlineKeyboardMarkup(keyboards.keyboard_vote_web_app)
-    update.message.reply_text('Привет', reply_markup=reply_markup)
+    update.message.reply_text('Привет! Если вы используете бот впервые отправьте номер', reply_markup=reply_markup)
+    #reply_markup = InlineKeyboardMarkup(keyboards.keyboard_vote_web_app)
+    #update.message.reply_text('Привет', reply_markup=reply_markup)
 
 
 def menu_messages_info(update: Update, context: CallbackContext) -> None:
@@ -50,6 +50,26 @@ def menu_messages_info(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(title_menu_messages_info,
                               reply_markup=reply_markup)
 
+def open_vote_page(update: Update, context: CallbackContext):
+    telegram_id = update.message.from_user.id
+
+    user = user_module.get_user_by_telegram_id(telegram_id)
+
+    if (user == None):
+        update.message.reply_text('У вас нет доступа к данной команде')
+        return
+
+    user_access = user_module.get_user_access(user)
+    reply_markup = ''
+
+    if (user_access == user_module.ADMIN or user_access == user_module.TUTOR):
+        reply_markup = ReplyKeyboardMarkup(keyboards.keyboard_vote_web_app, resize_keyboard=True)
+        update.message.reply_text("Открыть страницу опросов",reply_markup=reply_markup)
+    else:
+        update.message.reply_text('У вас нет доступа к данной команде')
+
+    
+    
 
 def contact_user(update: Update, context: CallbackContext) -> None:
     user_module.register_user_on_bot(update)
@@ -66,6 +86,8 @@ def reg_commands(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler(
         "menu_messages_info", menu_messages_info))
+    dispatcher.add_handler(CommandHandler(
+        "open_vote_page", open_vote_page))
 
 
 def reg_callback_querys(dispatcher):
@@ -101,4 +123,4 @@ def reg_message_handlers(dispatcher):
         "^/message_[0-9]+$"), info_messages_search.choose_message_ccallback))
     dispatcher.add_handler(MessageHandler(Filters.regex(
         "^/category_[0-9]+$"), get_categorys_menu.get_messages_by_category))
-    dispatcher.add_handler(MessageHandler(Filters.web_app_data, web_app.web_app_data))
+    dispatcher.add_handler(MessageHandler(Filters.status_update.web_app_data, web_app.web_app_data))
