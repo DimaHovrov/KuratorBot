@@ -19,6 +19,8 @@ import create_temporal_link.create_temporal_link_command as create_temporal_link
 
 import web_app.web_app as web_app
 
+import vote.vote_send as vote_send
+
 def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(
         [[KeyboardButton('Share contact', request_contact=True)]], resize_keyboard=True)
@@ -94,11 +96,17 @@ def reg_callback_querys(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.send_info_messages_icallback, pattern="^" + str(p_s.SEND_MESSAGE_PATTERN) + "$"))
     dispatcher.add_handler(CallbackQueryHandler(
+        vote_send.send_vote_icallback, pattern="^" + str(p_s.SEND_VOTE_PATTERN) + "$"))
+    dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.delete_info_messages_icallback, pattern="^" + str(p_s.DELETE_MESSAGE_PATTERN) + "$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.select_groups_icalback, pattern="^group [0-9]+ [0-9]+ [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
+        vote_send.select_groups_icalback, pattern="^vote_groups [0-9]+ [0-9]+ [0-9]+$"))
+    dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.send_info_messages_after_icallback, pattern="^group send$"))
+    dispatcher.add_handler(CallbackQueryHandler(
+        vote_send.send_info_messages_after_icallback, pattern="^vote_groups send$"))
     dispatcher.add_handler(CallbackQueryHandler(
         sud_messages.question_delete_icallback, pattern="^q_delete [0-9]+$"))
     dispatcher.add_handler(CallbackQueryHandler(
@@ -123,4 +131,6 @@ def reg_message_handlers(dispatcher):
         "^/message_[0-9]+$"), info_messages_search.choose_message_ccallback))
     dispatcher.add_handler(MessageHandler(Filters.regex(
         "^/category_[0-9]+$"), get_categorys_menu.get_messages_by_category))
+    dispatcher.add_handler(MessageHandler(Filters.regex(
+        "^/vote_[0-9]+$"), vote_send.vote_choose))
     dispatcher.add_handler(MessageHandler(Filters.status_update.web_app_data, web_app.web_app_data))

@@ -5,7 +5,10 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, Re
 
 import re
 import general.patterns_states as p_s
-import model.Groups as Groups
+
+#import model.Groups as Groups
+import model.GroupsModels.StudyGroup as StudyGroup
+
 import model.User as User
 import model.InfoMessage as InfoMessage
 
@@ -37,7 +40,7 @@ def select_groups_icalback(update: Update, context: CallbackContext):
     query.answer()
     result = re.findall("[0-9]+", query.data)
     id, row, col = int(result[0]), int(result[1]), int(result[2])
-
+    query.message.reply_text(id)
     group_selected(id, row, col, context.user_data)
     reply_markup = InlineKeyboardMarkup(
         update_inline_keyboard_groups(context.user_data['selected_group']))
@@ -131,7 +134,7 @@ def get_id_group_by_pattern(pattern):
     return int(pattern_index)  # число после group
 
 
-def generate_inline_buttons_group(groups):
+def generate_inline_buttons_group(groups, prefix_pattern, prefix_send_pattern):
     groups_keyboard = []
     groups_keyboard.append([])
 
@@ -139,11 +142,14 @@ def generate_inline_buttons_group(groups):
     iteration_index = 0
     for group in groups:
         iteration_index += 1
-        name = group.name
+        course_year = group.course_number
+        group_name = group.group_name
+        type_name = group.type_name
+        name = f"""{type_name}-{group_name}-{course_year}"""
         if iteration_index % (max_count_buttons_in_line+1) == 0:
             row_index += 1
             groups_keyboard.append([])
-        pattern = prefix_group_pattern + \
+        pattern = prefix_pattern + \
             str(group.id) + " " + str(row_index) + " " + \
             str(len(groups_keyboard[row_index]))
         groups_keyboard[row_index].append(InlineKeyboardButton(
@@ -151,7 +157,7 @@ def generate_inline_buttons_group(groups):
 
     groups_keyboard.append([])
     row_index += 1
-    pattern = prefix_group_pattern + 'send'
+    pattern = prefix_send_pattern + 'send'
     name = 'Отправить'
     groups_keyboard[row_index].append(InlineKeyboardButton(
         name, callback_data=pattern))
@@ -206,6 +212,6 @@ def remove_group(id, row, col, user_data):
     user_data['selected_group'].remove(id)
 
 
-groups = Groups.get_all_groups()
-default_groups_keyboard = generate_inline_buttons_group(groups)
-groups_keyboard = generate_inline_buttons_group(groups)
+groups = StudyGroup.get_all_study_group_with_name()
+default_groups_keyboard = generate_inline_buttons_group(groups, prefix_group_pattern, prefix_group_pattern)
+groups_keyboard = generate_inline_buttons_group(groups, prefix_group_pattern, prefix_group_pattern)
