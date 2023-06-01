@@ -40,9 +40,21 @@ def get_vote_by_id(id):
         print(exp)
         return False
 
+def update_vote_data_by_id(vote_id, data):
+    try:
+        db.query = f"""update Vote
+                       set Data='{data}'
+                       where id = {vote_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return True
+    except Exception as exp:
+        print(exp)
+        return False
+
 def get_max_id():
     db.query = f"""select max(id) as id from Vote"""
     result = db.pool.retry_operation_sync(db.execute_query)
     if result[0].rows[0].id == None:
         return 0
     return result[0].rows[0].id
+

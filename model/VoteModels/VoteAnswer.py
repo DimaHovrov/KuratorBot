@@ -18,7 +18,7 @@ def add_answer(vote_id, user_id):
         db.query = f"""insert into VoteAnswer (id, UserId, VoteId)
                        values ({max_id}, {user_id}, {vote_id})"""
         result = db.pool.retry_operation_sync(db.execute_query)
-        return True
+        return max_id
     except Exception as exp:
         print(exp)
         return False

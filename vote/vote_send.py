@@ -36,6 +36,8 @@ def vote_choose(update: Update, context: CallbackContext):
     vote = Vote.get_vote_by_id(vote_id)
 
     if (user_access == User.ADMIN or user_access == User.TUTOR):
+        context.user_data['choosed_vote_id'] = vote_id
+        context.user_data['choosed_vote_description'] = vote.description
         message = f"""Описание: {vote.description}"""
         reply_markup = InlineKeyboardMarkup(keyboards.keyboard_send_vote)
         update.message.reply_text(text=message, reply_markup=reply_markup)
@@ -53,7 +55,7 @@ def vote_choose(update: Update, context: CallbackContext):
         update.message.reply_text('Вы уже ответили на данный опрос')
         return
     
-    web_app_button = [[KeyboardButton(text="Ответить на опрос", web_app=WebAppInfo("https://kurator-bot.website.yandexcloud.net?voteId={vote.id}"))]]
+    web_app_button = [[KeyboardButton(text="Ответить на опрос", web_app=WebAppInfo(f"""https://kurator-bot.website.yandexcloud.net/#/answer?voteId={vote.id}"""))]]
     reply_markup = ReplyKeyboardMarkup(web_app_button)
     update.message.reply_text('Чтобы отвеить на данный опрос пожалуйста нажмите на кнопку "Ответить на опрос"', reply_markup=reply_markup)
 
@@ -125,7 +127,7 @@ def send_info_messages_after_icallback(update: Update, context: CallbackContext)
             query.bot.send_message(
                 chat_id=telegram_id, text=vote_text)
     
-    query.message.reply_text(text="Сообщение успешно отправилось")
+    query.message.reply_text(text="Опрос успешно отправилось")
 
 
 def group_selected(id, row, col, user_data):

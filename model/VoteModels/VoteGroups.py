@@ -40,6 +40,20 @@ def check_group_to_vote(user_group_id, vote_id):
         return False
         
 
+def get_list_votes_id_by_group_id(group_id:int):
+    try:
+        db.query=f"""select * from VoteGroups
+                     where GroupId = {group_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        votes_id = []
+        for row in result[0].rows:
+            votes_id.append(row.VoteId)
+        return votes_id
+    except Exception as exp:
+        print(exp)
+        return False
+
+
 def get_max_id():
     db.query = f"""select max(id) as id from VoteGroups"""
     result = db.pool.retry_operation_sync(db.execute_query)

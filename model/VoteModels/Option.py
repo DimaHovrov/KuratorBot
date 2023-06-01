@@ -16,6 +16,7 @@ class Option:
 def add_option(option: Option):
     try:    
         max_id = get_max_id() + 1
+        option.id = max_id
         db.query = f"""insert into Option (id, QuestionId, Text, VoteId)
                        values ({max_id}, {option.question_id}, '{option.text}', {option.vote_id})"""
         result = db.pool.retry_operation_sync(db.execute_query)
