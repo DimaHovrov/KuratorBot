@@ -20,6 +20,7 @@ import create_temporal_link.create_temporal_link_command as create_temporal_link
 import web_app.web_app as web_app
 
 import vote.vote_send as vote_send
+import vote.get_vote_list as get_vote_list
 
 import menus.info_messages_menu as info_messages_menu
 
@@ -92,6 +93,8 @@ def reg_commands(dispatcher):
         "menu_messages_info", menu_messages_info))
     dispatcher.add_handler(CommandHandler(
         "open_vote_page", open_vote_page))
+    dispatcher.add_handler(CommandHandler(
+        "get_vote_list", get_vote_list.get_vote_list))
     dispatcher.add_handler(CommandHandler(
         "cancel", info_messages_menu.cancel))
 

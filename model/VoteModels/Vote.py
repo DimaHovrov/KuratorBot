@@ -39,6 +39,21 @@ def get_vote_by_id(id):
     except Exception as exp:
         print(exp)
         return False
+    
+def get_votes_by_author_id(id):
+    try:
+        db.query = f"""select * from Vote
+                       where AuthorId = {id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        votes = []
+        for row in result[0].rows:
+            vote = Vote(id = row.id, description=row.Description, author_id = row.AuthorId, data = row.Data)
+            votes.append(vote)
+        return votes
+    except Exception as exp:
+        print(exp)
+        return False
+    
 
 def update_vote_data_by_id(vote_id, data):
     try:
