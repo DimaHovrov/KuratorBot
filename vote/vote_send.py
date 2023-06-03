@@ -9,6 +9,7 @@ import model.User as User
 import model.VoteModels.VoteGroups as VoteGroups
 import model.VoteModels.VoteAnswer as VoteAnswer
 import model.VoteModels.Vote as Vote
+import vote.vote_answer_result as vote_answer_result
 
 import general.keyboards as keyboards
 import re
@@ -36,11 +37,8 @@ def vote_choose(update: Update, context: CallbackContext):
     vote = Vote.get_vote_by_id(vote_id)
 
     if (user_access == User.ADMIN or user_access == User.TUTOR):
-        context.user_data['choosed_vote_id'] = vote_id
-        context.user_data['choosed_vote_description'] = vote.description
-        message = f"""Описание: {vote.description}"""
-        reply_markup = InlineKeyboardMarkup(keyboards.keyboard_send_vote)
-        update.message.reply_text(text=message, reply_markup=reply_markup)
+        out_vote_for_tutor(update, context, vote)
+        
         return
     
     #проверка на доступ к опросу
@@ -83,6 +81,15 @@ def select_groups_icalback(update: Update, context: CallbackContext):
     reply_markup = InlineKeyboardMarkup(
         update_inline_keyboard_groups(context.user_data[user_data_groups], groups_keyboard))
     query.edit_message_reply_markup(reply_markup=reply_markup)
+
+
+def out_vote_for_tutor(update, context, vote):
+    message = vote_answer_result.out_vote_answer_result(vote)
+    context.user_data['choosed_vote_id'] = vote.id
+    context.user_data['choosed_vote_description'] = vote.description
+    #message = f"""Описание: {vote.description}"""
+    reply_markup = InlineKeyboardMarkup(keyboards.keyboard_send_vote)
+    update.message.reply_text(text=message, reply_markup=reply_markup)
 
 
 def update_inline_keyboard_groups(selected_group, groups_keyboard):

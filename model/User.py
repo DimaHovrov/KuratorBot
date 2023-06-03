@@ -93,6 +93,20 @@ def get_user_by_telegram_id(telegram_id):
     return user
 
 
+def get_user_by_user_id(user_id):
+
+    db.query = f"""select * from Users as user where user.Id = {user_id};"""
+
+    result = db.pool.retry_operation_sync(db.execute_query)
+
+    if len(result[0].rows) == 0:
+        return None
+
+    user = make_user_object(result)
+
+    return user
+
+
 def set_telegram_id_by_id(id, telegram_id):
     db.query = f"""update Users set TelegramId = {telegram_id} where Id = {id} """
     result = db.pool.retry_operation_sync(db.execute_query)

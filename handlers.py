@@ -55,6 +55,7 @@ def menu_messages_info(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(title_menu_messages_info,
                               reply_markup=reply_markup)
 
+
 def open_vote_page(update: Update, context: CallbackContext):
     telegram_id = update.message.from_user.id
 
@@ -73,8 +74,6 @@ def open_vote_page(update: Update, context: CallbackContext):
     else:
         update.message.reply_text('У вас нет доступа к данной команде')
 
-    
-    
 
 def contact_user(update: Update, context: CallbackContext) -> None:
     user_module.register_user_on_bot(update)

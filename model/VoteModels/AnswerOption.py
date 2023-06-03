@@ -23,6 +23,21 @@ def add_answer_option(answer_question_id, option_id):
         return False
 
 
+def get_answer_options_by_answer_question_id(answer_question_id):
+    try:
+        db.query = f"""select * 
+                       from AnswerOption
+                       where AnswerQuestionId = {answer_question_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        answer_options = []
+        for row in result[0].rows:
+            answer_option = AnswerOption(id=row.id, answer_question_id=row.AnswerQuestionId, option_id=row.OptionId)
+            answer_options.append(answer_option)
+        return answer_options
+    except Exception as exp:
+        print(exp)
+        return False
+
 def get_max_id():
     db.query = f"""select max(id) as id from AnswerOption"""
     result = db.pool.retry_operation_sync(db.execute_query)

@@ -26,6 +26,21 @@ def add_answer_question(answer_id, question_id):
         return False
 
 
+def get_answer_question_by_vote_answer_id(vote_answer_id):
+    try:
+        db.query = f"""select * 
+                       from AnswerQuestion
+                       where AnswerId = {vote_answer_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        answer_questions = []
+        for row in result[0].rows:
+            answer_question = AnswerQuestion(id= row.id, answer_id=row.AnswerId, question_id=row.QuestionId)
+            answer_questions.append(answer_question)
+        return answer_questions
+    except Exception as exp:
+        print(exp)
+        return False
+
 def get_max_id():
     db.query = f"""select max(id) as id from AnswerQuestion"""
     result = db.pool.retry_operation_sync(db.execute_query)

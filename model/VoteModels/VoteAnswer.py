@@ -40,6 +40,34 @@ def check_answer_to_vote(user_id, vote_id):
         return False
 
 
+def count_answer_in_vote(vote_id: int):
+    try:
+        db.query = f"""select count(VoteId) as count
+                       from VoteAnswer
+                       where VoteId = {vote_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        return result[0].rows[0].count
+    except Exception as exp:
+        print(exp)
+        return False
+
+
+def get_vote_answer_by_vote_id(vote_id):
+    try:
+        db.query = f"""select *
+                       from VoteAnswer
+                       where VoteId = {vote_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+
+        vote_answers = []
+        for row in result[0].rows:
+            vote_answer = VoteAnswer(id=row.id, vote_id=row.VoteId, user_id=row.UserId)
+            vote_answers.append(vote_answer)
+        return vote_answers
+    except Exception as exp:
+        print(exp)
+        return False
+
 def get_max_id():
     db.query = f"""select max(id) as id from VoteAnswer"""
     result = db.pool.retry_operation_sync(db.execute_query)

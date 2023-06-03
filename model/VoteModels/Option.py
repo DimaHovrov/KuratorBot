@@ -24,7 +24,23 @@ def add_option(option: Option):
     except Exception as exp:
         print(exp,"asdfdsafdsaf")
         return False
+
+
+def get_options_by_question_id(question_id):
+    try:
+        db.query = f"""select * from Option
+                       where QuestionId = {question_id}"""
+        result = db.pool.retry_operation_sync(db.execute_query)
+        options = []
+        for row in result[0].rows:
+            option = Option(id = row.id, vote_id = row.VoteId, question_id=row.QuestionId, text=row.Text)
+            options.append(option)
+        return options
+    except Exception as exp:
+        print(exp)
+        return False
     
+
 def get_max_id():
     db.query = f"""select max(id) as id from Option"""
     result = db.pool.retry_operation_sync(db.execute_query)
